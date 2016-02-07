@@ -6,6 +6,6 @@ package com.example.showtime.app.model;
 public class Calendar {
     public int calendar_id;
     public String movie_name_calendar;
-    public String data;
+    public String date;
     public String poster_image;
 }

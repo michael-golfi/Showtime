@@ -41,7 +41,7 @@ public class AppDatabaseHelper extends SQLiteOpenHelper {
 
     //Calendar Table Columns
     private static final String KEY_CALENDAR_ID = "calendar_id";
-    private static final String KEY_DATA = "data";
+    private static final String KEY_DATE = "date";
     private static final String KEY_MOVIE_NAME_CALENDAR = "movie_name_calendar";
     private static final String KEY_POSTER_IMAGE = "poster_image";
 
@@ -110,7 +110,7 @@ public class AppDatabaseHelper extends SQLiteOpenHelper {
         String CREATE_TABLE_CALENDAR = "CREATE TABLE" + TABLE_CALENDAR +
                 "(" +
                 KEY_CALENDAR_ID + " INTEGER PRIMARY KEY," +
-                KEY_DATA + "DATE NOT NULL," +
+                KEY_DATE + "DATE NOT NULL," +
                 KEY_MOVIE_NAME_CALENDAR + " TEXT NOT NULL," +
                 KEY_POSTER_IMAGE + "URL," +
                 ")";
@@ -269,7 +269,7 @@ public class AppDatabaseHelper extends SQLiteOpenHelper {
         db.beginTransaction();
         try {
             ContentValues values = new ContentValues();
-            values.put(KEY_DATA, calendar.data);
+            values.put(KEY_DATE, calendar.date);
             values.put(KEY_MOVIE_NAME_CALENDAR, calendar.movie_name_calendar);
             values.put(KEY_POSTER_IMAGE, calendar.poster_image);
             db.insertOrThrow(TABLE_CALENDAR, null, values);
@@ -295,7 +295,7 @@ public class AppDatabaseHelper extends SQLiteOpenHelper {
                 do {
                     Calendar newCalendar = new Calendar();
                     newCalendar.calendar_id = cursor.getInt(cursor.getColumnIndex(KEY_CALENDAR_ID));
-                    newCalendar.data = cursor.getString(cursor.getColumnIndex(KEY_DATA));
+                    newCalendar.date = cursor.getString(cursor.getColumnIndex(KEY_DATE));
                     newCalendar.movie_name_calendar = cursor.getString(cursor.getColumnIndex(KEY_MOVIE_NAME_CALENDAR));
                     newCalendar.poster_image = cursor.getString(cursor.getColumnIndex(KEY_POSTER_IMAGE));
                     calendarEntries.add(newCalendar);
@@ -325,7 +325,7 @@ public class AppDatabaseHelper extends SQLiteOpenHelper {
             if (cursor.moveToFirst()) {
                 //do {
                 selecteCalendar.calendar_id = cursor.getInt(cursor.getColumnIndex(KEY_USER_ID));//This is probably wrong
-                selecteCalendar.data = cursor.getString(cursor.getColumnIndex(KEY_DATA));
+                selecteCalendar.date = cursor.getString(cursor.getColumnIndex(KEY_DATE));
                 selecteCalendar.movie_name_calendar = cursor.getString(cursor.getColumnIndex(KEY_MOVIE_NAME_CALENDAR));
                 selecteCalendar.poster_image = cursor.getString(cursor.getColumnIndex(KEY_POSTER_IMAGE));
             }
