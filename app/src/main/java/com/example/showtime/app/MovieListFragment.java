@@ -7,7 +7,6 @@ import android.support.v4.app.ListFragment;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import com.example.showtime.app.dummy.DummyContent;
 import com.example.showtime.app.service.MovieService;
 import info.movito.themoviedbapi.model.MovieDb;
 import info.movito.themoviedbapi.model.core.MovieResultsPage;
@@ -62,8 +61,11 @@ public class MovieListFragment extends ListFragment {
     private static Callbacks sDummyCallbacks = new Callbacks() {
         @Override
         public void onItemSelected(String id) {
+
         }
     };
+
+    private List<MovieDb> movies = new ArrayList<>();
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -87,7 +89,7 @@ public class MovieListFragment extends ListFragment {
                     getActivity(),
                     android.R.layout.simple_list_item_activated_1,
                     android.R.id.text1,
-                    new ArrayList<MovieDb>()));
+                    movies));
         }
 
     }
@@ -129,7 +131,8 @@ public class MovieListFragment extends ListFragment {
 
         // Notify the active callbacks interface (the activity, if the
         // fragment is attached to one) that an item has been selected.
-        mCallbacks.onItemSelected(DummyContent.ITEMS.get(position).id);
+        String stringId = String.valueOf(movies.get(position).getId());
+        mCallbacks.onItemSelected(stringId);
     }
 
     @Override
@@ -186,11 +189,12 @@ public class MovieListFragment extends ListFragment {
         @Override
         protected void onPostExecute(List<MovieDb> result) {
             super.onPostExecute(result);
+            movies = result;
             setListAdapter(new ArrayAdapter<>(
                     getActivity(),
                     android.R.layout.simple_list_item_activated_1,
                     android.R.id.text1,
-                    result));
+                    movies));
         }
     }
 }

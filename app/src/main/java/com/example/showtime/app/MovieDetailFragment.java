@@ -1,16 +1,20 @@
 package com.example.showtime.app;
 
 import android.graphics.Movie;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import com.example.showtime.app.dummy.DummyContent;
 import com.example.showtime.app.service.MovieService;
 import info.movito.themoviedbapi.model.MovieDb;
 import info.movito.themoviedbapi.model.core.MovieResultsPage;
+
+import java.util.List;
 
 /**
  * A fragment representing a single Movie detail screen.
@@ -61,5 +65,31 @@ public class MovieDetailFragment extends Fragment {
         }
 
         return rootView;
+    }
+
+    private class getItemLists extends
+            AsyncTask<String, String, MovieDb> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected void onProgressUpdate(String... values) {
+            super.onProgressUpdate(values);
+        }
+
+        @Override
+        protected MovieDb doInBackground(String... params) {
+            int id = Integer.parseInt(params[0]);
+            MovieDb results = MovieService.getMovieDetailsById(id);
+            return results;
+        }
+
+        @Override
+        protected void onPostExecute(MovieDb result) {
+            super.onPostExecute(result);
+            //movies = result;
+        }
     }
 }
