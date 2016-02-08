@@ -89,10 +89,10 @@ public class MovieListFragment extends ListFragment {
             }
         } else {
             List<Calendar> calendarEntries = new ArrayList<Calendar>();
-            AppDatabaseHelper helper = AppDatabaseHelper.getInstance(getContext());
-            calendarEntries = helper.retrieveAllCalendarEntries();
-            getMovie gm = new getMovie();
-            gm.execute(calendarEntries);
+//            AppDatabaseHelper helper = AppDatabaseHelper.getInstance(getContext());
+//            calendarEntries = helper.retrieveAllCalendarEntries();
+//            getMovie gm = new getMovie();
+//            gm.execute(calendarEntries);
             setListAdapter(new ArrayAdapter<>(
                     getActivity(),
                     android.R.layout.simple_list_item_activated_1,
