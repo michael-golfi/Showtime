@@ -1,20 +1,14 @@
 package com.example.showtime.app;
 
-import android.graphics.Movie;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.TextView;
-import com.example.showtime.app.dummy.DummyContent;
 import com.example.showtime.app.service.MovieService;
 import info.movito.themoviedbapi.model.MovieDb;
-import info.movito.themoviedbapi.model.core.MovieResultsPage;
-
-import java.util.List;
 
 /**
  * A fragment representing a single Movie detail screen.
@@ -41,6 +35,8 @@ public class MovieDetailFragment extends Fragment {
     public MovieDetailFragment() {
     }
 
+    View rootView = null;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,18 +46,17 @@ public class MovieDetailFragment extends Fragment {
             // arguments. In a real-world scenario, use a Loader
             // to load content from a content provider.
             String movieId = getArguments().getString(ARG_ITEM_ID);
-            mItem = MovieService.getMovieDetailsById(Integer.parseInt(movieId));
+            getItemLists gfl = new getItemLists();
+            gfl.execute(movieId);
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_movie_detail, container, false);
-
-        // Show the dummy content as text in a TextView.
+        rootView = inflater.inflate(R.layout.fragment_movie_detail, container, false);
         if (mItem != null) {
-            ((TextView) rootView.findViewById(R.id.movie_detail)).setText(mItem.getTitle());
+            ((TextView) rootView.findViewById(R.id.title)).setText(mItem.getTitle());
         }
 
         return rootView;
@@ -89,7 +84,11 @@ public class MovieDetailFragment extends Fragment {
         @Override
         protected void onPostExecute(MovieDb result) {
             super.onPostExecute(result);
-            //movies = result;
+            mItem = result;
+
+            ((TextView) rootView.findViewById(R.id.title)).setText(mItem.getTitle());
+            ((TextView) rootView.findViewById(R.id.release_date)).setText(mItem.getReleaseDate());
+            ((TextView) rootView.findViewById(R.id.description)).setText(mItem.getOverview());
         }
     }
 }
