@@ -73,7 +73,7 @@ public class MovieDetailFragment extends Fragment implements Button.OnClickListe
         calendar_entry.calendar_id = mItem.getId();
         calendar_entry.movie_name_calendar = mItem.getTitle();
         calendar_entry.date = mItem.getReleaseDate();
-        AppDatabaseHelper helper = AppDatabaseHelper.getInstance(getContext());
+        AppDatabaseHelper helper = AppDatabaseHelper.getInstance(getActivity());
         helper.addDate(calendar_entry);
     }
 
