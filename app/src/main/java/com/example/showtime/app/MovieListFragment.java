@@ -7,6 +7,9 @@ import android.support.v4.app.ListFragment;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+
+import com.example.showtime.app.model.AppDatabaseHelper;
+import com.example.showtime.app.model.Calendar;
 import com.example.showtime.app.service.MovieService;
 import info.movito.themoviedbapi.model.MovieDb;
 import info.movito.themoviedbapi.model.core.MovieResultsPage;
@@ -85,6 +88,11 @@ public class MovieListFragment extends ListFragment {
                 gfl.execute(query);
             }
         } else {
+            List<Calendar> calendarEntries = new ArrayList<Calendar>();
+            AppDatabaseHelper helper = AppDatabaseHelper.getInstance(getContext());
+            calendarEntries = helper.retrieveAllCalendarEntries();
+            getMovie gm = new getMovie();
+            gm.execute(calendarEntries);
             setListAdapter(new ArrayAdapter<>(
                     getActivity(),
                     android.R.layout.simple_list_item_activated_1,
@@ -113,6 +121,7 @@ public class MovieListFragment extends ListFragment {
         if (!(activity instanceof Callbacks)) {
             throw new IllegalStateException("Activity must implement fragment's callbacks.");
         }
+
 
         mCallbacks = (Callbacks) activity;
     }
@@ -195,6 +204,35 @@ public class MovieListFragment extends ListFragment {
                     android.R.layout.simple_list_item_activated_1,
                     android.R.id.text1,
                     movies));
+        }
+    }
+
+    private class getMovie extends
+            AsyncTask<List<Calendar>, String, List<MovieDb>> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected void onProgressUpdate(String... values) {
+            super.onProgressUpdate(values);
+        }
+
+        @Override
+        protected List<MovieDb> doInBackground(List<Calendar>... calendarEntries) {
+            List<MovieDb> movies = new ArrayList<>();
+            for (Calendar calendar_entry : calendarEntries[0]){
+               movies.add(MovieService.getMovieDetailsById(calendar_entry.calendar_id));
+            }
+
+            return movies;
+        }
+
+        @Override
+        protected void onPostExecute(List<MovieDb> result) {
+            super.onPostExecute(result);
+            movies.addAll(result);
         }
     }
 }
