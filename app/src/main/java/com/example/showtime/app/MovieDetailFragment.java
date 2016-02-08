@@ -59,6 +59,7 @@ public class MovieDetailFragment extends Fragment implements Button.OnClickListe
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_movie_detail, container, false);
+        rootView.findViewById(R.id.add).setOnClickListener(this);
         if (mItem != null) {
             ((TextView) rootView.findViewById(R.id.title)).setText(mItem.getTitle());
         }
