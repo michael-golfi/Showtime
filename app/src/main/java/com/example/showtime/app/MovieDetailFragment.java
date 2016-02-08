@@ -9,10 +9,13 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.example.showtime.app.model.AppDatabaseHelper;
-import com.example.showtime.app.model.Calendar;
+import com.example.showtime.app.model.DatabaseHelper;
+import com.example.showtime.app.model.Movie;
 import com.example.showtime.app.service.MovieService;
+import com.j256.ormlite.android.apptools.OpenHelperManager;
 import info.movito.themoviedbapi.model.MovieDb;
+
+import java.sql.SQLException;
 
 /**
  * A fragment representing a single Movie detail screen.
@@ -30,7 +33,7 @@ public class MovieDetailFragment extends Fragment implements Button.OnClickListe
     /**
      * The dummy content this fragment is presenting.
      */
-    private MovieDb mItem;
+    private Movie mItem;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -39,7 +42,15 @@ public class MovieDetailFragment extends Fragment implements Button.OnClickListe
     public MovieDetailFragment() {
     }
 
+    private DatabaseHelper databaseHelper;
+
     View rootView = null;
+
+    private DatabaseHelper getHelper() {
+        if (databaseHelper == null)
+            databaseHelper = OpenHelperManager.getHelper(getActivity(), DatabaseHelper.class);
+        return databaseHelper;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -69,16 +80,15 @@ public class MovieDetailFragment extends Fragment implements Button.OnClickListe
 
     @Override
     public void onClick(View v) {
-        Calendar calendar_entry = new Calendar();
-        calendar_entry.calendar_id = mItem.getId();
-        calendar_entry.movie_name_calendar = mItem.getTitle();
-        calendar_entry.date = mItem.getReleaseDate();
-        AppDatabaseHelper helper = AppDatabaseHelper.getInstance(getActivity());
-        helper.addDate(calendar_entry);
+        try {
+            getHelper().createMovie(mItem);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     private class getItemLists extends
-            AsyncTask<String, String, MovieDb> {
+            AsyncTask<String, String, Movie> {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -90,14 +100,14 @@ public class MovieDetailFragment extends Fragment implements Button.OnClickListe
         }
 
         @Override
-        protected MovieDb doInBackground(String... params) {
+        protected Movie doInBackground(String... params) {
             int id = Integer.parseInt(params[0]);
             MovieDb result = MovieService.getMovieDetailsById(id);
-            return result;
+            return new Movie(result);
         }
 
         @Override
-        protected void onPostExecute(MovieDb result) {
+        protected void onPostExecute(Movie result) {
             super.onPostExecute(result);
             mItem = result;
 

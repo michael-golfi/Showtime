@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import com.example.showtime.app.R;
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.support.ConnectionSource;
@@ -22,8 +23,11 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     // any time you make changes to your database objects, you may have to increase the database version
     private static final int DATABASE_VERSION = 1;
 
-
     private Dao<Movie, Integer> movieDao = null;
+
+    public DatabaseHelper(Context context) {
+        super(context, DATABASE_NAME, null, DATABASE_VERSION, R.raw.ormlite_config);
+    }
 
     public DatabaseHelper(Context context, String databaseName, SQLiteDatabase.CursorFactory factory, int databaseVersion) {
         super(context, databaseName, factory, databaseVersion);
@@ -53,24 +57,24 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             throw new RuntimeException(e);
         }
     }
+
     /**
      * Returns the Database Access Object (DAO) for our Movie class. It will create it or just give the cached
      * value.
      */
-    public Dao<Movie, Integer> getMovieDao() throws SQLException{
-        if(movieDao == null){
+    public Dao<Movie, Integer> getMovieDao() throws SQLException {
+        if (movieDao == null) {
             movieDao = getDao(Movie.class);
         }
-        return  movieDao;
+        return movieDao;
     }
 
-    public void createMovie(int tmdb_id, String movie_name, String release_date) throws SQLException {
-        Movie movie = new Movie(tmdb_id,movie_name,release_date);
+    public void createMovie(Movie movie) throws SQLException {
         movieDao.create(movie);
     }
 
-    public void deleteMovie(int tmdb_id) throws SQLException {
-        movieDao.deleteById(tmdb_id);
+    public void deleteMovie(int id) throws SQLException {
+        movieDao.deleteById(id);
     }
 
     @Override
