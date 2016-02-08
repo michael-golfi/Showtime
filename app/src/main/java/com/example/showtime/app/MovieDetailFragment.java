@@ -6,7 +6,11 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
+
+import com.example.showtime.app.model.AppDatabaseHelper;
+import com.example.showtime.app.model.Calendar;
 import com.example.showtime.app.service.MovieService;
 import info.movito.themoviedbapi.model.MovieDb;
 
@@ -16,7 +20,7 @@ import info.movito.themoviedbapi.model.MovieDb;
  * in two-pane mode (on tablets) or a {@link MovieDetailActivity}
  * on handsets.
  */
-public class MovieDetailFragment extends Fragment {
+public class MovieDetailFragment extends Fragment implements Button.OnClickListener {
     /**
      * The fragment argument representing the item ID that this fragment
      * represents.
@@ -60,6 +64,16 @@ public class MovieDetailFragment extends Fragment {
         }
 
         return rootView;
+    }
+
+    @Override
+    public void onClick(View v) {
+        Calendar calendar_entry = new Calendar();
+        calendar_entry.calendar_id = mItem.getId();
+        calendar_entry.movie_name_calendar = mItem.getTitle();
+        calendar_entry.date = mItem.getReleaseDate();
+        AppDatabaseHelper helper = AppDatabaseHelper.getInstance(getContext());
+        helper.addDate(calendar_entry);
     }
 
     private class getItemLists extends
