@@ -92,8 +92,8 @@ public class MovieDetailFragment extends Fragment implements Button.OnClickListe
         @Override
         protected MovieDb doInBackground(String... params) {
             int id = Integer.parseInt(params[0]);
-            MovieDb results = MovieService.getMovieDetailsById(id);
-            return results;
+            MovieDb result = MovieService.getMovieDetailsById(id);
+            return result;
         }
 
         @Override
