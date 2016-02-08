@@ -92,11 +92,7 @@ public class MovieListFragment extends ListFragment {
             AppDatabaseHelper helper = AppDatabaseHelper.getInstance(getContext());
             calendarEntries = helper.retrieveAllCalendarEntries();
             getMovie gm = new getMovie();
-            for(int i = 0; i< calendarEntries.size(); i++){
-                gm.execute(calendarEntries.get(i).calendar_id);
-            }
-
-
+            gm.execute(calendarEntries);
             setListAdapter(new ArrayAdapter<>(
                     getActivity(),
                     android.R.layout.simple_list_item_activated_1,
@@ -212,7 +208,7 @@ public class MovieListFragment extends ListFragment {
     }
 
     private class getMovie extends
-            AsyncTask<Integer, String, MovieDb> {
+            AsyncTask<List<Calendar>, String, List<MovieDb>> {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -224,15 +220,19 @@ public class MovieListFragment extends ListFragment {
         }
 
         @Override
-        protected MovieDb doInBackground(Integer... id) {
-            MovieDb result = MovieService.getMovieDetailsById(id[0]);
-            return result;
+        protected List<MovieDb> doInBackground(List<Calendar>... calendarEntries) {
+            List<MovieDb> movies = new ArrayList<>();
+            for (Calendar calendar_entry : calendarEntries[0]){
+               movies.add(MovieService.getMovieDetailsById(calendar_entry.calendar_id));
+            }
+
+            return movies;
         }
 
         @Override
-        protected void onPostExecute(MovieDb result) {
+        protected void onPostExecute(List<MovieDb> result) {
             super.onPostExecute(result);
-            movies.add(result);
+            movies.addAll(result);
         }
     }
 }
