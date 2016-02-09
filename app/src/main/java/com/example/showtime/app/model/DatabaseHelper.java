@@ -69,12 +69,38 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return movieDao;
     }
 
-    public void createMovie(Movie movie) throws SQLException {
-        movieDao.create(movie);
+    public void createMovie(Movie movie) {
+        try {
+            movieDao.createIfNotExists(movie);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
-    public void deleteMovie(int id) throws SQLException {
-        movieDao.deleteById(id);
+    public Movie getMovie(int id) {
+        try {
+            return movieDao.queryForId(id);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public void deleteMovie(int id) {
+        try {
+            movieDao.deleteById(id);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public boolean movieExists(int id) {
+        try {
+            return movieDao.idExists(id);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     @Override

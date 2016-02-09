@@ -14,7 +14,7 @@ import java.util.List;
  */
 @DatabaseTable(tableName = "movies")
 public class Movie {
-    @DatabaseField
+    @DatabaseField(id = true)
     private int id;
 
     @DatabaseField
