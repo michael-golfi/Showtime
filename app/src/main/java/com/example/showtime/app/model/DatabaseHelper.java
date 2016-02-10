@@ -72,6 +72,9 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     public void createMovie(Movie movie) {
         try {
+            if (movieDao == null) {
+                movieDao = getDao(Movie.class);
+            }
             movieDao.createIfNotExists(movie);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -80,6 +83,9 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     public Movie getMovie(int id) {
         try {
+            if (movieDao == null) {
+                movieDao = getDao(Movie.class);
+            }
             return movieDao.queryForId(id);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -89,6 +95,9 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     public void deleteMovie(int id) {
         try {
+            if (movieDao == null) {
+                movieDao = getDao(Movie.class);
+            }
             movieDao.deleteById(id);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -97,6 +106,9 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     public boolean movieExists(int id) {
         try {
+            if (movieDao == null) {
+                movieDao = getDao(Movie.class);
+            }
             return movieDao.idExists(id);
         } catch (SQLException e) {
             e.printStackTrace();

@@ -69,11 +69,10 @@ public class DatabaseHelperTest {
         movie1.setTitle("UP");
         movie1.setReleaseDate("29-05-2009");
         movie1.setOverview("Seventy-eight year old Carl Fredricksen travels to Paradise Falls in his home equipped with balloons, inadvertently taking a young stowaway.");
-        //moviesDao.create(movie);
         databaseHelper.createMovie(movie1);
         Dao<Movie, Integer> moviesDao = databaseHelper.getMovieDao();
+        //moviesDao.create(movie1);
         assertTrue(moviesDao.countOf() == 1);
-        //assertTrue(moviesDao.queryForAll().get(0).equals(movie));
         Movie movie2;
         movie2 = moviesDao.queryForId(1);
         assertTrue(movie2.getId() == 1);
@@ -83,7 +82,6 @@ public class DatabaseHelperTest {
     }
 
     //Test we cannot add twice a movie with the same id to the database
-    @Test(expected=SQLException.class)
     public void addTwiceMovieWithSameIdTest() throws SQLException{
        // databaseHelper = getDatabaseHelper();
         Movie movie1 = new Movie();
@@ -99,6 +97,8 @@ public class DatabaseHelperTest {
         movie2.setReleaseDate("29-05-2009");
         movie2.setOverview("Seventy-eight year old Carl Fredricksen travels to Paradise Falls in his home equipped with balloons, inadvertently taking a young stowaway.");
         databaseHelper.createMovie(movie2);
+        Dao<Movie, Integer> moviesDao = databaseHelper.getMovieDao();
+        assertTrue(moviesDao.countOf() == 1);
 
     }
 
