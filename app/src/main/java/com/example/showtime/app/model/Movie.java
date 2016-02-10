@@ -14,7 +14,7 @@ import java.util.List;
  */
 @DatabaseTable(tableName = "movies")
 public class Movie {
-    @DatabaseField
+    @DatabaseField(id = true)
     private int id;
 
     @DatabaseField
@@ -286,6 +286,23 @@ public class Movie {
     public List<MovieList> getLists() {
         return lists;
     }*/
+
+    public  void setId(int id){
+        this.id = id;
+    }
+
+    public void setTitle(String title){
+        this.title = title;
+    }
+
+    public  void setReleaseDate (String releaseDate){
+        this.releaseDate = releaseDate;
+    }
+
+    public  void setOverview (String overview){
+        this.overview = overview;
+    }
+
 
     public String toString(){
         return title + " - " + releaseDate;

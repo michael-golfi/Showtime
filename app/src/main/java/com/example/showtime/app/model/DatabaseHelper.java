@@ -70,10 +70,16 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     }
 
     public void createMovie(Movie movie) throws SQLException {
+        if (movieDao == null) {
+            movieDao = getDao(Movie.class);
+        }
         movieDao.create(movie);
     }
 
     public void deleteMovie(int id) throws SQLException {
+        if (movieDao == null) {
+            movieDao = getDao(Movie.class);
+        }
         movieDao.deleteById(id);
     }
 
