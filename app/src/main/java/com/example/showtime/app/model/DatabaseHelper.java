@@ -116,6 +116,17 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return false;
     }
 
+    public long getCountOfMovies(){
+        try {
+            if (movieDao == null) {
+                movieDao = getDao(Movie.class);
+            }
+            return movieDao.countOf();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
     @Override
     public void close() {
         super.close();

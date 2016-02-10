@@ -38,7 +38,6 @@ public class DatabaseHelperTest {
 
     private DatabaseHelper getDatabaseHelper() {
         if (databaseHelper == null)
-            //databaseHelper = OpenHelperManager.getHelper(RuntimeEnvironment.application.getApplicationContext(), DatabaseHelper.class);
             databaseHelper = new DatabaseHelper(RuntimeEnvironment.application.getApplicationContext());
         return databaseHelper;
     }
@@ -63,18 +62,16 @@ public class DatabaseHelperTest {
 
     //Test movie is properly added to the database and can be queried from the database
     @Test
-    public void addMovieTest() throws SQLException {
+    public void createMovieTest() throws SQLException {
         Movie movie1 = new Movie();
         movie1.setId(1);
         movie1.setTitle("UP");
         movie1.setReleaseDate("29-05-2009");
         movie1.setOverview("Seventy-eight year old Carl Fredricksen travels to Paradise Falls in his home equipped with balloons, inadvertently taking a young stowaway.");
         databaseHelper.createMovie(movie1);
-        Dao<Movie, Integer> moviesDao = databaseHelper.getMovieDao();
-        //moviesDao.create(movie1);
-        assertTrue(moviesDao.countOf() == 1);
+        assertTrue(databaseHelper.getCountOfMovies() == 1);
         Movie movie2;
-        movie2 = moviesDao.queryForId(1);
+        movie2 = databaseHelper.getMovie(1);
         assertTrue(movie2.getId() == 1);
         assertTrue(movie2.getTitle().equals("UP"));
         assertTrue(movie2.getReleaseDate().equals("29-05-2009"));
@@ -82,14 +79,13 @@ public class DatabaseHelperTest {
     }
 
     //Test we cannot add twice a movie with the same id to the database
-    public void addTwiceMovieWithSameIdTest() throws SQLException{
-       // databaseHelper = getDatabaseHelper();
+    @Test
+    public void createMovieTwiceWithSameIdTest() throws SQLException{
         Movie movie1 = new Movie();
         movie1.setId(1);
         movie1.setTitle("UP");
         movie1.setReleaseDate("29-05-2009");
         movie1.setOverview("Seventy-eight year old Carl Fredricksen travels to Paradise Falls in his home equipped with balloons, inadvertently taking a young stowaway.");
-        //moviesDao.create(movie);
         databaseHelper.createMovie(movie1);
         Movie movie2 = new Movie();
         movie2.setId(1);
@@ -97,15 +93,58 @@ public class DatabaseHelperTest {
         movie2.setReleaseDate("29-05-2009");
         movie2.setOverview("Seventy-eight year old Carl Fredricksen travels to Paradise Falls in his home equipped with balloons, inadvertently taking a young stowaway.");
         databaseHelper.createMovie(movie2);
-        Dao<Movie, Integer> moviesDao = databaseHelper.getMovieDao();
-        assertTrue(moviesDao.countOf() == 1);
+        assertTrue(databaseHelper.getCountOfMovies() == 1);
 
     }
 
-    //Test retrieving all movies from the database
+    //Test retrieving a specific movie from the database
     @Test
-    public void retrieveAllMoviesFromDatabaseTest(){
+    public void getMovieTest(){
+        Movie movie1 = new Movie();
+        movie1.setId(1);
+        movie1.setTitle("UP");
+        movie1.setReleaseDate("29-05-2009");
+        movie1.setOverview("Seventy-eight year old Carl Fredricksen travels to Paradise Falls in his home equipped with balloons, inadvertently taking a young stowaway.");
+        Movie movie2 = new Movie();
+        movie2.setId(2);
+        movie2.setTitle("Toy Story");
+        movie2.setReleaseDate("22-11-1995");
+        movie2.setOverview("A cowboy doll is profoundly threatened and jealous when a new spaceman figure supplants him as top toy in a boy's room.");
+        databaseHelper.createMovie(movie1);
+        databaseHelper.createMovie(movie2);
+        Movie movie3 = databaseHelper.getMovie(2);
+        assertTrue(movie3.getId() == 2);
+        assertTrue(movie3.getTitle().equals("Toy Story"));
+        assertTrue(movie3.getReleaseDate().equals("22-11-1995"));
+        assertTrue(movie3.getOverview().equals("A cowboy doll is profoundly threatened and jealous when a new spaceman figure supplants him as top toy in a boy's room."));
 
+    }
+
+    //Test deleting a movie from the database
+    @Test
+    public void deleteMovieTest(){
+        Movie movie1 = new Movie();
+        movie1.setId(1);
+        movie1.setTitle("UP");
+        movie1.setReleaseDate("29-05-2009");
+        movie1.setOverview("Seventy-eight year old Carl Fredricksen travels to Paradise Falls in his home equipped with balloons, inadvertently taking a young stowaway.");
+        databaseHelper.createMovie(movie1);
+        assertTrue(databaseHelper.getCountOfMovies() == 1);
+        databaseHelper.deleteMovie(1);
+        assertTrue(databaseHelper.getCountOfMovies() == 0);
+    }
+
+    //Test if a specific movie exists in the database
+    @Test
+    public void movieExistsTest(){
+        Movie movie1 = new Movie();
+        movie1.setId(1);
+        movie1.setTitle("UP");
+        movie1.setReleaseDate("29-05-2009");
+        movie1.setOverview("Seventy-eight year old Carl Fredricksen travels to Paradise Falls in his home equipped with balloons, inadvertently taking a young stowaway.");
+        databaseHelper.createMovie(movie1);
+        assertTrue(databaseHelper.movieExists(1));
+        assertFalse(databaseHelper.movieExists(2));
     }
 
 }
