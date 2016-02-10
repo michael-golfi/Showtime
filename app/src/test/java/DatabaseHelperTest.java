@@ -105,7 +105,7 @@ public class DatabaseHelperTest {
     //Test retrieving all movies from the database
     @Test
     public void retrieveAllMoviesFromDatabaseTest(){
-        
+
     }
 
 }

@@ -109,9 +109,9 @@ public class MovieListActivity extends AppCompatActivity
             args.putString("query", query);
             newFragment.setArguments(args);
 
-            transaction.replace(R.id.movie_list, newFragment);
-            transaction.addToBackStack(null);
-            transaction.commit();
+            transaction.replace(R.id.movie_list, newFragment)
+                    .addToBackStack(null)
+                    .commit();
         }
 
         return false;

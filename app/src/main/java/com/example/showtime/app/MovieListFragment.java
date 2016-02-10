@@ -1,10 +1,13 @@
 package com.example.showtime.app;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -105,11 +108,21 @@ public class MovieListFragment extends ListFragment {
                         android.R.layout.simple_list_item_activated_1,
                         android.R.id.text1,
                         movies));
+
             } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
 
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = super.onCreateView(inflater, container, savedInstanceState);
+        // The lists will overlap if the list is transparent
+        view.setBackgroundColor(Color.WHITE);
+
+        return view;
     }
 
     private DatabaseHelper getDatabaseHelper() {
