@@ -13,6 +13,6 @@ public class MovieService {
     }
 
     public static MovieDb getMovieDetailsById(int id) {
-        return api.getMovies().getMovie(id, "en", null);
+        return api.getMovies().getMovie(id, "en");
     }
 }
