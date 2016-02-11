@@ -120,6 +120,7 @@ public class MovieListActivity extends AppCompatActivity
     @Override
     public boolean onQueryTextChange(String s) {
         Log.d("MovieListActivity", "Search Text Change");
+        onQueryTextSubmit(s);
         return false;
     }
 }
