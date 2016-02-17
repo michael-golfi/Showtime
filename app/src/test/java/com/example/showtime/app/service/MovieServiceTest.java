@@ -1,8 +1,12 @@
 package com.example.showtime.app.service;
 
+
 import info.movito.themoviedbapi.model.MovieDb;
 import info.movito.themoviedbapi.model.core.MovieResultsPage;
+
 import org.junit.Test;
+
+import java.util.List;
 
 public class MovieServiceTest {
 
@@ -50,5 +54,19 @@ public class MovieServiceTest {
     public void testGetMovieByNotTitleNotGenre() throws Exception {
         MovieResultsPage movies = MovieService.searchForMovies("dfsdfdf");
         assert movies.getResults().size() == 0;
+    }
+
+    @Test
+    public void testGetMoviesByActor() throws  Exception{
+        List<MovieDb> results = MovieService.getMoviesByActor("Leonardo Dicaprio");
+        assert results.get(0).getTitle().equals("Romeo + Juliet");
+        assert results.get(1).getTitle().equals("Titanic");
+
+    }
+
+    @Test
+    public void testGetMoviesByActorWithNonExistingName(){
+        List<MovieDb> results = MovieService.getMoviesByActor("Titanic");
+        assert results.size() == 0;
     }
 }
