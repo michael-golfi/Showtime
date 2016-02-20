@@ -4,9 +4,12 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:1.2.3'
+        classpath 'me.leolin:android-aspectj-plugin:1.0.7'
     }
 }
+
 apply plugin: 'com.android.application'
+apply plugin: 'me.leolin.gradle-android-aspectj'
 
 repositories {
     jcenter()
@@ -23,6 +26,11 @@ android {
         versionCode 1
         versionName "1.0"
     }
+
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
+
     buildTypes {
         release {
             minifyEnabled false
