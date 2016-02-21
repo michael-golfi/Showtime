@@ -1,5 +1,6 @@
 package com.example.showtime.app;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -8,14 +9,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-
 import com.example.showtime.app.model.DatabaseHelper;
 import com.example.showtime.app.model.Movie;
+import com.example.showtime.app.service.GoogleCalendar;
 import com.example.showtime.app.service.MovieService;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import info.movito.themoviedbapi.model.MovieDb;
 
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 /**
  * A fragment representing a single Movie detail screen.
@@ -84,16 +90,35 @@ public class MovieDetailFragment extends Fragment implements Button.OnClickListe
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_movie_detail, container, false);
         rootView.findViewById(R.id.add).setOnClickListener(this);
+        rootView.findViewById(R.id.export_btn).setOnClickListener(this);
+
 
         return rootView;
     }
 
     @Override
     public void onClick(View v) {
-        try {
-            createOrDeleteMovie(mItem);
-        } catch (SQLException e) {
-            e.printStackTrace();
+        Button clicked = ((Button) v);
+        if (clicked.getId() == R.id.add) {
+            try {
+                createOrDeleteMovie(mItem);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } else if (clicked.getId() == R.id.export_btn) {
+            String releaseDate = mItem.getReleaseDate();
+            try {
+                GregorianCalendar cal = new GregorianCalendar();
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                Date date = sdf.parse(releaseDate);
+                cal.setTime(date);
+
+                Intent addToCalendar = GoogleCalendar.addToCalendarIntent(mItem.getTitle(), cal);
+                startActivity(addToCalendar);
+
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         }
     }
 
