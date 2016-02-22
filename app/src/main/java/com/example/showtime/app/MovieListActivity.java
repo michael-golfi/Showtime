@@ -30,7 +30,8 @@ import android.support.v7.widget.SearchView;
  * to listen for item selections.
  */
 public class MovieListActivity extends AppCompatActivity
-        implements MovieListFragment.Callbacks, SearchView.OnQueryTextListener {
+        implements MovieListFragment.Callbacks, SearchView.OnQueryTextListener,
+        MenuItemCompat.OnActionExpandListener {
 
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
@@ -94,6 +95,7 @@ public class MovieListActivity extends AppCompatActivity
         MenuItem searchItem = menu.findItem(R.id.action_search);
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         searchView.setOnQueryTextListener(this);
+        MenuItemCompat.setOnActionExpandListener(searchItem, this);
 
         return super.onCreateOptionsMenu(menu);
     }
@@ -124,5 +126,20 @@ public class MovieListActivity extends AppCompatActivity
             onQueryTextSubmit(s);
         }
         return false;
+    }
+
+    @Override
+    public boolean onMenuItemActionExpand(MenuItem item) {
+        return true;
+    }
+
+    @Override
+    public boolean onMenuItemActionCollapse(MenuItem item) {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        Fragment newFragment = new MovieListFragment();
+        transaction.replace(R.id.movie_list, newFragment)
+                .addToBackStack(null)
+                .commit();
+        return true;
     }
 }
