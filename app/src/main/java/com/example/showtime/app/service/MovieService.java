@@ -58,4 +58,18 @@ public class MovieService {
         }
         return movieResults;
     }
+    public static List<MovieDb> getMovieByDirector(String director){
+        List<MovieDb> movieResults = new ArrayList<>();
+        TmdbPeople.PersonResultsPage directorResults = api.getSearch().searchPerson(director,false,0);
+        if (directorResults.getResults().size() ==0) {
+            return movieResults;
+        }
+        int director_id = directorResults.getResults().get(0).getId();
+        List<PersonCredit> credits = api.getPeople().getPersonCredits(director_id).getCast();
+        for (int i = 0;i<MAX_ALLOWED_REQUESTS;i++){
+            movieResults.add(api.getMovies().getMovie(credits.get(i).getMovieId(),"en"));
+        }
+
+        return movieResults;
+    }
 }
