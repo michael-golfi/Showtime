@@ -13,7 +13,6 @@ public class MovieServiceTest {
     @Test
     public void testGetMoviesByTitle() throws Exception {
         MovieResultsPage movies = MovieService.getMoviesByTitle("Superman");
-        System.out.print(movies);
         assert movies.getTotalResults() > 20;
         assert movies.getResults().get(0).getTitle().equals("Superman");
     }
