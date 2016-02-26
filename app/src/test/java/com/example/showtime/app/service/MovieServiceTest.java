@@ -1,6 +1,8 @@
 package com.example.showtime.app.service;
 
 
+import com.example.showtime.app.model.Movie;
+
 import info.movito.themoviedbapi.model.MovieDb;
 import info.movito.themoviedbapi.model.core.MovieResultsPage;
 
@@ -59,8 +61,19 @@ public class MovieServiceTest {
     @Test
     public void testGetMoviesByActor() throws  Exception{
         List<MovieDb> results = MovieService.getMoviesByActor("Leonardo Dicaprio");
-        assert results.get(0).getTitle().equals("Romeo + Juliet");
-        assert results.get(1).getTitle().equals("Titanic");
+        assert results.size() > 0;
+        System.out.println(results.get(1).getTitle());
+        assert results.get(0).getTitle().equals("The Beach");
+        assert results.get(1).getTitle().equals("The Aviator");
+
+    }
+
+    @Test
+    public void testGetMoviesByActorOtherAPI() throws  Exception{
+        List<Movie> results = MovieService.getMoviesByActorOtherApi("Leonardo Dicaprio");
+        assert results.size() > 0;
+        assert results.get(0).getTitle().equals("The Revenant");
+        assert results.get(1).getTitle().equals("Django Unchained");
 
     }
 

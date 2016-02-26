@@ -1,11 +1,19 @@
 package com.example.showtime.app.service;
 
+import com.example.showtime.app.model.Movie;
+import com.uwetrottmann.tmdb.Tmdb;
+import com.uwetrottmann.tmdb.entities.AppendToDiscoverResponse;
+import com.uwetrottmann.tmdb.enumerations.SortBy;
+import com.uwetrottmann.tmdb.services.DiscoverService;
+
 import info.movito.themoviedbapi.TmdbApi;
 import info.movito.themoviedbapi.TmdbPeople;
 import info.movito.themoviedbapi.model.MovieDb;
 import info.movito.themoviedbapi.model.core.MovieResultsPage;
 import info.movito.themoviedbapi.model.people.PersonCredit;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,6 +21,8 @@ public class MovieService {
 
     //Since we are only allowed 40 requests per second
     private static final int MAX_ALLOWED_REQUESTS = 20;
+
+    private static Tmdb tmdb = new Tmdb();
 
     private static TmdbApi api = new TmdbApi("0279053766dc7d93871419292081d94f");
 
@@ -55,6 +65,33 @@ public class MovieService {
         List<PersonCredit> credits = api.getPeople().getPersonCredits(actor_id).getCast();
         for(int i=0; i < MAX_ALLOWED_REQUESTS; i++){
             movieResults.add(api.getMovies().getMovie(credits.get(i).getMovieId(), "en"));
+        }
+        return movieResults;
+    }
+
+    public static List<Movie> getMoviesByActorOtherApi(String actor) {
+        com.uwetrottmann.tmdb.entities.MovieResultsPage resultsPage;
+        tmdb.setApiKey("0279053766dc7d93871419292081d94f");
+        DiscoverService discoverService = tmdb.discoverService();
+        List<Movie> movieResults = new ArrayList<>();
+        TmdbPeople.PersonResultsPage actorsResults = api.getSearch().searchPerson(actor, false, 0);
+        if(actorsResults.getResults().size() == 0){
+            return movieResults;
+        }
+        int actor_id = actorsResults.getResults().get(0).getId();
+        resultsPage = discoverService.discoverMovie(false,false,"en",1,
+                null,null,null,null,null, SortBy.POPULARITY_DESC,
+                null,null,null,null, new AppendToDiscoverResponse(actor_id),
+                null,null,null,null,null,null);
+
+        DateFormat df = new SimpleDateFormat("MM-dd-yyyy");
+        for (com.uwetrottmann.tmdb.entities.Movie movie : resultsPage.results){
+            Movie new_movie = new Movie();
+            new_movie.setId(movie.id);
+            new_movie.setTitle(movie.title);
+            new_movie.setReleaseDate(df.format(movie.release_date));
+            new_movie.setOverview(movie.overview);
+            movieResults.add(new_movie);
         }
         return movieResults;
     }
