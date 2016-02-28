@@ -235,6 +235,9 @@ public class MovieListFragment extends ListFragment {
                 movies.add(new Movie(movie));
 
             return movies;
+
+            // TODO: fix this Nicolas ....
+            //return MovieService.getMoviesByDate(params[0], 2003);
         }
 
         @Override

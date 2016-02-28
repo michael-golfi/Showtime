@@ -1,5 +1,9 @@
 package com.example.showtime.app.service;
 
+import android.util.Log;
+
+import com.example.showtime.app.model.Movie;
+
 import info.movito.themoviedbapi.TmdbApi;
 import info.movito.themoviedbapi.TmdbPeople;
 import info.movito.themoviedbapi.model.MovieDb;
@@ -7,6 +11,7 @@ import info.movito.themoviedbapi.model.core.MovieResultsPage;
 import info.movito.themoviedbapi.model.people.PersonCredit;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class MovieService {
@@ -71,5 +76,35 @@ public class MovieService {
         }
 
         return movieResults;
+    }
+
+    public static List<Movie> getMoviesByDate(String query, int year) {
+        Log.d("MovieService", "getMoviesByDate query: " + query + ", year: " + year);
+
+        if (year < 0)
+        {
+            throw new RuntimeException("Year cannot be negative");
+        }
+
+        List<Movie> moviesResults = new ArrayList<>();
+        MovieResultsPage movies = null;
+
+        try
+        {
+            movies = api.getSearch().searchMovie(query, year, "en", false, 0);
+        }
+        catch (RuntimeException exception)
+        {
+            throw  exception;
+        }
+
+
+        Iterator<MovieDb> it = movies.iterator();
+        while (it.hasNext())
+        {
+            moviesResults.add(new Movie(it.next()));
+        }
+
+        return moviesResults;
     }
 }

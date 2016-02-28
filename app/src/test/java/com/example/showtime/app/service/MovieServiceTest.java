@@ -1,6 +1,8 @@
 package com.example.showtime.app.service;
 
 
+import com.example.showtime.app.model.Movie;
+
 import info.movito.themoviedbapi.model.MovieDb;
 import info.movito.themoviedbapi.model.core.MovieResultsPage;
 
@@ -70,4 +72,41 @@ public class MovieServiceTest {
         assert results.size() == 0;
     }
 
+    @Test
+    public void testGetMoviesByDate(){
+        List<Movie> results = MovieService.getMoviesByDate("Batman", 2003);
+        assert results.size() == 4;
+    }
+
+    @Test
+    public void testGetMoviesByInvalidDate(){
+        boolean assertIfTrue = false;
+
+        try
+        {
+            List<Movie> results = MovieService.getMoviesByDate("Batman", -2003);
+        }
+        catch (RuntimeException exception)
+        {
+            assertIfTrue = true;
+        }
+
+        assert assertIfTrue;
+    }
+
+    @Test
+    public void testGetMoviesByDateEmptyQuery(){
+        boolean assertIfTrue = false;
+
+        try
+        {
+            List<Movie> results = MovieService.getMoviesByDate("", 2003);
+        }
+        catch (RuntimeException exception)
+        {
+            assertIfTrue = true;
+        }
+
+        assert assertIfTrue;
+    }
 }
