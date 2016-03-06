@@ -58,7 +58,7 @@ public class MovieServiceTest {
         assert movies.getResults().size() == 0;
     }
 
-    @Test
+    /*@Test
     public void testGetMoviesByActor() throws  Exception{
         List<MovieDb> results = MovieService.getMoviesByActor("Leonardo Dicaprio");
         assert results.size() > 0;
@@ -66,21 +66,31 @@ public class MovieServiceTest {
         assert results.get(0).getTitle().equals("The Beach");
         assert results.get(1).getTitle().equals("The Aviator");
 
-    }
+    }*/
 
     @Test
-    public void testGetMoviesByActorOtherAPI() throws  Exception{
-        List<Movie> results = MovieService.getMoviesByActorOtherApi("Leonardo Dicaprio");
+    public void testGetMoviesByActor() throws  Exception{
+        List<Movie> results = MovieService.getMoviesByActor("Leonardo Dicaprio");
         assert results.size() > 0;
-        assert results.get(0).getTitle().equals("The Revenant");
-        assert results.get(1).getTitle().equals("Django Unchained");
-
     }
 
     @Test
     public void testGetMoviesByActorWithNonExistingName(){
-        List<MovieDb> results = MovieService.getMoviesByActor("Titanic");
+        List<Movie> results = MovieService.getMoviesByActor("Titanic");
         assert results.size() == 0;
     }
 
+    @Test
+    public  void testGetMoviesByDirector() throws Exception{
+        List<Movie> results = MovieService.getMoviesByDirector("Martin Scorsese");
+        assert results.size() > 0;
+        System.out.println(results.get(0).getTitle());
+        System.out.println(results.get(1).getTitle());
+    }
+
+    @Test
+    public  void testGetMoviesByDirectorWithNonExistingName() throws Exception{
+        List<Movie> results = MovieService.getMoviesByDirector("Shutter Island");
+        assert results.size() == 0;
+    }
 }
