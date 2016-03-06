@@ -231,13 +231,14 @@ public class MovieListFragment extends ListFragment {
         protected List<Movie> doInBackground(String... params) {
             MovieResultsPage results = MovieService.searchForMovies(params[0]);
             List<Movie> movies = new ArrayList<>();
-            for (MovieDb movie : results)
-                movies.add(new Movie(movie));
+
+            if (results != null)
+            {
+                for (MovieDb movie : results)
+                    movies.add(new Movie(movie));
+            }
 
             return movies;
-
-            // TODO: fix this Nicolas ....
-            //return MovieService.getMoviesByDate(params[0], 2003);
         }
 
         @Override

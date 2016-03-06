@@ -74,35 +74,35 @@ public class MovieServiceTest {
 
     @Test
     public void testGetMoviesByDate(){
-        List<Movie> results = MovieService.getMoviesByDate("Batman", 2003);
-        assert results.size() == 4;
+        MovieResultsPage results = MovieService.getMoviesByDate("2003");
+        assert results.getResults().size() == 20;
     }
 
     @Test
-    public void testGetMoviesByInvalidDate(){
+    public void testGetMoviesByDateWithNegativedDate(){
+        MovieResultsPage results = MovieService.getMoviesByDate("-003");
+        if (results != null)
+        {
+            assert true;
+        }
+
+        results = MovieService.getMoviesByDate("-2003");
+
+        if (results != null)
+        {
+            assert true;
+        }
+    }
+
+    @Test
+    public void testGetMoviesByDateWithInvalidDate(){
         boolean assertIfTrue = false;
 
         try
         {
-            List<Movie> results = MovieService.getMoviesByDate("Batman", -2003);
+            MovieResultsPage results = MovieService.getMoviesByDate("a003");
         }
-        catch (RuntimeException exception)
-        {
-            assertIfTrue = true;
-        }
-
-        assert assertIfTrue;
-    }
-
-    @Test
-    public void testGetMoviesByDateEmptyQuery(){
-        boolean assertIfTrue = false;
-
-        try
-        {
-            List<Movie> results = MovieService.getMoviesByDate("", 2003);
-        }
-        catch (RuntimeException exception)
+        catch (RuntimeException NumberFormatException)
         {
             assertIfTrue = true;
         }

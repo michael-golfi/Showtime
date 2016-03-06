@@ -4,11 +4,16 @@ import android.util.Log;
 
 import com.example.showtime.app.model.Movie;
 
+import org.apache.commons.codec.binary.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
+
 import info.movito.themoviedbapi.TmdbApi;
 import info.movito.themoviedbapi.TmdbPeople;
+import info.movito.themoviedbapi.model.Discover;
 import info.movito.themoviedbapi.model.MovieDb;
 import info.movito.themoviedbapi.model.core.MovieResultsPage;
 import info.movito.themoviedbapi.model.people.PersonCredit;
+import info.movito.themoviedbapi.model.core.ResultsPage;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -27,6 +32,12 @@ public class MovieService {
         // Very primitive form of parsing a genre
         if (Genres.getGenreId(query) >= 0)
             return getMoviesByGenre(query);
+
+        // Even more primitive way of parsing year
+        if (query.startsWith("#"))
+        {
+            return getMoviesByDate(query.substring(1));
+        }
 
         // By default, get movies by title
         return getMoviesByTitle(query);
@@ -78,33 +89,36 @@ public class MovieService {
         return movieResults;
     }
 
-    public static List<Movie> getMoviesByDate(String query, int year) {
-        Log.d("MovieService", "getMoviesByDate query: " + query + ", year: " + year);
-
-        if (year < 0)
-        {
-            throw new RuntimeException("Year cannot be negative");
-        }
-
-        List<Movie> moviesResults = new ArrayList<>();
+    public static MovieResultsPage getMoviesByDate(String query) {
+        Log.d("MovieService", "getMoviesByDate year: " + query);
         MovieResultsPage movies = null;
-
         try
         {
-            movies = api.getSearch().searchMovie(query, year, "en", false, 0);
+            int year = Integer.parseInt(query);
+
+            if (year > 0 && query.length() == 4)
+            {
+                try
+                {
+                    // Make sure that we only query movies that where released on the given year.
+                    Discover discover = new Discover();
+                    discover.primaryReleaseYear(year);
+
+                    movies = api.getDiscover().getDiscover(discover);
+                }
+                catch (RuntimeException exception)
+                {
+                    Log.d("MovieService", "getMoviesByDate Failed to get movies from database");
+                    throw  exception;
+                }
+            }
         }
-        catch (RuntimeException exception)
+        catch (NumberFormatException e)
         {
-            throw  exception;
+            Log.d("MovieService", "getMoviesByDate Not a valid integer");
+            throw e;
         }
 
-
-        Iterator<MovieDb> it = movies.iterator();
-        while (it.hasNext())
-        {
-            moviesResults.add(new Movie(it.next()));
-        }
-
-        return moviesResults;
+        return movies;
     }
 }
