@@ -58,17 +58,25 @@ public class MovieServiceTest {
         assert movies.getResults().size() == 0;
     }
 
-    @Test
+    /*@Test
     public void testGetMoviesByActor() throws  Exception{
         List<MovieDb> results = MovieService.getMoviesByActor("Leonardo Dicaprio");
-        assert results.get(0).getTitle().equals("Romeo + Juliet");
-        assert results.get(1).getTitle().equals("Titanic");
+        assert results.size() > 0;
+        System.out.println(results.get(1).getTitle());
+        assert results.get(0).getTitle().equals("The Beach");
+        assert results.get(1).getTitle().equals("The Aviator");
 
+    }*/
+
+    @Test
+    public void testGetMoviesByActor() throws  Exception{
+        List<Movie> results = MovieService.getMoviesByActor("Leonardo Dicaprio");
+        assert results.size() > 0;
     }
 
     @Test
     public void testGetMoviesByActorWithNonExistingName(){
-        List<MovieDb> results = MovieService.getMoviesByActor("Titanic");
+        List<Movie> results = MovieService.getMoviesByActor("Titanic");
         assert results.size() == 0;
     }
 
@@ -95,18 +103,28 @@ public class MovieServiceTest {
     }
 
     @Test
-    public void testGetMoviesByDateWithInvalidDate(){
+    public void testGetMoviesByDateWithInvalidDate() {
         boolean assertIfTrue = false;
 
-        try
-        {
+        try {
             MovieResultsPage results = MovieService.getMoviesByDate("a003");
-        }
-        catch (RuntimeException NumberFormatException)
-        {
+        } catch (RuntimeException NumberFormatException) {
             assertIfTrue = true;
         }
 
         assert assertIfTrue;
+    }
+
+    public  void testGetMoviesByDirector() throws Exception{
+        List<Movie> results = MovieService.getMoviesByDirector("Martin Scorsese");
+        assert results.size() > 0;
+        System.out.println(results.get(0).getTitle());
+        System.out.println(results.get(1).getTitle());
+    }
+
+    @Test
+    public  void testGetMoviesByDirectorWithNonExistingName() throws Exception{
+        List<Movie> results = MovieService.getMoviesByDirector("Shutter Island");
+        assert results.size() == 0;
     }
 }
