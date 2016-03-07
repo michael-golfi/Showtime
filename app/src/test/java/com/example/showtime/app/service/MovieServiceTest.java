@@ -58,16 +58,6 @@ public class MovieServiceTest {
         assert movies.getResults().size() == 0;
     }
 
-    /*@Test
-    public void testGetMoviesByActor() throws  Exception{
-        List<MovieDb> results = MovieService.getMoviesByActor("Leonardo Dicaprio");
-        assert results.size() > 0;
-        System.out.println(results.get(1).getTitle());
-        assert results.get(0).getTitle().equals("The Beach");
-        assert results.get(1).getTitle().equals("The Aviator");
-
-    }*/
-
     @Test
     public void testGetMoviesByActor() throws  Exception{
         List<Movie> results = MovieService.getMoviesByActor("Leonardo Dicaprio");
@@ -115,11 +105,10 @@ public class MovieServiceTest {
         assert assertIfTrue;
     }
 
-    public  void testGetMoviesByDirector() throws Exception{
+    @Test
+    public void testGetMoviesByDirector() throws Exception{
         List<Movie> results = MovieService.getMoviesByDirector("Martin Scorsese");
         assert results.size() > 0;
-        System.out.println(results.get(0).getTitle());
-        System.out.println(results.get(1).getTitle());
     }
 
     @Test

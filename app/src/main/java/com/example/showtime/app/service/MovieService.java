@@ -53,6 +53,15 @@ public class MovieService {
         return getMoviesByTitle(query);
     }
 
+    public static List<Movie> searchForMoviesByPerson(String query){
+        if(getMoviesByDirector(query).size() > 0){
+            return getMoviesByDirector(query);
+        }
+        else{
+            return getMoviesByActor(query);
+        }
+    }
+
     public static MovieResultsPage getMoviesByTitle(String query) {
         return api.getSearch().searchMovie(query, null, "en", false, 0);
     }
@@ -85,12 +94,17 @@ public class MovieService {
                 null,null,null,null, new AppendToDiscoverResponse(actor_id),
                 null,null,null,null,null,null);
 
-        DateFormat df = new SimpleDateFormat("YYYY-MM-DD");
+        DateFormat df = new SimpleDateFormat("yyyy-MM-DD");
         for (com.uwetrottmann.tmdb.entities.Movie movie : resultsPage.results){
             Movie new_movie = new Movie();
             new_movie.setId(movie.id);
             new_movie.setTitle(movie.title);
-            new_movie.setReleaseDate(df.format(movie.release_date));
+            if(movie.release_date != null) {
+                new_movie.setReleaseDate(df.format(movie.release_date));
+            }
+            else{
+                new_movie.setReleaseDate("Date not provided");
+            }
             new_movie.setOverview(movie.overview);
             movieResults.add(new_movie);
         }
@@ -112,12 +126,17 @@ public class MovieService {
                 null,null,null,null, null,
                 null,null,null,null,new AppendToDiscoverResponse(director_id),null);
 
-        DateFormat df = new SimpleDateFormat("YYYY-MM-DD");
+        DateFormat df = new SimpleDateFormat("yyyy-MM-DD");
         for (com.uwetrottmann.tmdb.entities.Movie movie : resultsPage.results){
             Movie new_movie = new Movie();
             new_movie.setId(movie.id);
             new_movie.setTitle(movie.title);
-            new_movie.setReleaseDate(df.format(movie.release_date));
+            if(movie.release_date != null) {
+                new_movie.setReleaseDate(df.format(movie.release_date));
+            }
+            else{
+                new_movie.setReleaseDate("Date not provided");
+            }
             new_movie.setOverview(movie.overview);
             movieResults.add(new_movie);
         }

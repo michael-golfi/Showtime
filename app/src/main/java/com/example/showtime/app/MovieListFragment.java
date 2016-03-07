@@ -229,13 +229,17 @@ public class MovieListFragment extends ListFragment {
 
         @Override
         protected List<Movie> doInBackground(String... params) {
+
             MovieResultsPage results = MovieService.searchForMovies(params[0]);
             List<Movie> movies = new ArrayList<>();
 
-            if (results != null)
-            {
-                for (MovieDb movie : results)
-                    movies.add(new Movie(movie));
+            if(results != null) {
+                if (results.getResults().size() > 0) {
+                    for (MovieDb movie : results)
+                        movies.add(new Movie(movie));
+                } else {
+                    movies = MovieService.searchForMoviesByPerson(params[0]);
+                }
             }
 
             return movies;
