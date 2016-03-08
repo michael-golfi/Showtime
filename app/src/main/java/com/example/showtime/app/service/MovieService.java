@@ -94,7 +94,7 @@ public class MovieService {
                 null,null,null,null, new AppendToDiscoverResponse(actor_id),
                 null,null,null,null,null,null);
 
-        DateFormat df = new SimpleDateFormat("yyyy-MM-DD");
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         for (com.uwetrottmann.tmdb.entities.Movie movie : resultsPage.results){
             Movie new_movie = new Movie();
             new_movie.setId(movie.id);
@@ -126,7 +126,7 @@ public class MovieService {
                 null,null,null,null, null,
                 null,null,null,null,new AppendToDiscoverResponse(director_id),null);
 
-        DateFormat df = new SimpleDateFormat("yyyy-MM-DD");
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         for (com.uwetrottmann.tmdb.entities.Movie movie : resultsPage.results){
             Movie new_movie = new Movie();
             new_movie.setId(movie.id);
