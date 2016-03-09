@@ -13,6 +13,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.support.v7.widget.SearchView;
 import android.widget.CalendarView;
+import com.example.showtime.app.model.DatabaseHelper;
+import com.j256.ormlite.android.apptools.OpenHelperManager;
 
 
 /**
@@ -106,6 +108,16 @@ public class MovieListActivity extends AppCompatActivity
             public boolean onMenuItemClick(MenuItem item) {
                 Intent intent = new Intent(MovieListActivity.this, CalendarActivity.class);
                 startActivity(intent);
+                return true;
+            }
+        });
+
+        MenuItem deleteAll = menu.findItem(R.id.action_delete_all);
+        deleteAll.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                MovieListFragment listFragment = ((MovieListFragment) getSupportFragmentManager().findFragmentById(R.id.movie_list));
+                listFragment.deleteAllMovies();
                 return true;
             }
         });
