@@ -12,6 +12,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.support.v7.widget.SearchView;
+import android.widget.CalendarView;
+
 
 /**
  * An activity representing a list of Movies. This activity
@@ -96,6 +98,17 @@ public class MovieListActivity extends AppCompatActivity
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         searchView.setOnQueryTextListener(this);
         MenuItemCompat.setOnActionExpandListener(searchItem, this);
+
+        MenuItem calendarbutton = menu.findItem(R.id.action_calendar);
+        CalendarView calendarView = (CalendarView) MenuItemCompat.getActionView(calendarbutton);
+        calendarbutton.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                Intent intent = new Intent(MovieListActivity.this, CalendarActivity.class);
+                startActivity(intent);
+                return true;
+            }
+        });
 
         return super.onCreateOptionsMenu(menu);
     }
