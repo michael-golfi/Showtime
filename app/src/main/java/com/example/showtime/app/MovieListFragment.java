@@ -104,9 +104,6 @@ public class MovieListFragment extends ListFragment {
                 Dao<Movie, Integer> moviesDao = databaseHelper.getMovieDao();
                 movies = moviesDao.queryForAll();
 
-                if (!(movies.size() > 0))
-                    Toast.makeText(getContext(), R.string.no_movies_added, Toast.LENGTH_LONG).show();
-
                 setListAdapter(new ArrayAdapter<>(
                         getActivity(),
                         android.R.layout.simple_list_item_activated_1,
@@ -154,7 +151,6 @@ public class MovieListFragment extends ListFragment {
         if (!(activity instanceof Callbacks)) {
             throw new IllegalStateException("Activity must implement fragment's callbacks.");
         }
-
 
         mCallbacks = (Callbacks) activity;
     }

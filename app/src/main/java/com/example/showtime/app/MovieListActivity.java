@@ -129,16 +129,18 @@ public class MovieListActivity extends AppCompatActivity
     public boolean onQueryTextSubmit(String query) {
         Log.d("MovieListActivity", "Search Submitted");
 
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        Fragment newFragment = new MovieListFragment(); //your search fragment
         if (query.length() > 2) {
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            Fragment newFragment = new MovieListFragment(); //your search fragment
+
             Bundle args = new Bundle();
             args.putString("query", query);
             newFragment.setArguments(args);
+
+            transaction.replace(R.id.movie_list, newFragment)
+                    .addToBackStack(null)
+                    .commit();
         }
-        transaction.replace(R.id.movie_list, newFragment)
-                .addToBackStack(null)
-                .commit();
 
         return false;
     }
