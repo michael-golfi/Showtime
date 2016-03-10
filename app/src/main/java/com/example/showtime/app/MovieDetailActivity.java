@@ -4,15 +4,12 @@ import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.support.v7.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
-
-import android.util.Log;
+import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-
 
 import com.example.showtime.app.service.NotifyService;
 
@@ -101,7 +98,7 @@ public class MovieDetailActivity extends AppCompatActivity implements Button.OnC
         PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, 0);
 
         Notification n = new Notification.Builder(this)
-                .setContentTitle("Movie: " + MovieDetailFragment.myMovie.getTitle() + ", will be released Today")
+                .setContentTitle("Release date: " + MovieDetailFragment.myMovie.getReleaseDate())
                 .setSmallIcon(R.drawable.ic_notification)
                 .setContentIntent(pIntent).build();
 
