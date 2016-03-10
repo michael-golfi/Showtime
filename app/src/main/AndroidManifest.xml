@@ -37,6 +37,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <receiver android:name=".model.Alarm" android:exported="true">
+            <intent-filter>
+                <action android:name="test" >
+                </action>
+            </intent-filter>
+        </receiver>
+        <service android:name=".service.AlarmService" android:exported="true">
+        </service>
 
     </application>
 

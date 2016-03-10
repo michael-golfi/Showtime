@@ -8,4 +8,6 @@ public class Calendar {
     public String movie_name_calendar;
     public String date;
     public String poster_image;
+
+
 }

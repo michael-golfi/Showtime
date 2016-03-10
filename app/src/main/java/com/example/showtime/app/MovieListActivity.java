@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.support.v7.widget.SearchView;
 import android.widget.CalendarView;
 import com.example.showtime.app.model.DatabaseHelper;
+import com.example.showtime.app.service.AlarmService;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 
 
@@ -46,6 +47,9 @@ public class MovieListActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Intent intent = new Intent(this, AlarmService.class);
+        startService(intent);
+        Log.d("MLA", "created service");
         setContentView(R.layout.activity_movie_list);
 
         if (findViewById(R.id.movie_detail_container) != null) {
