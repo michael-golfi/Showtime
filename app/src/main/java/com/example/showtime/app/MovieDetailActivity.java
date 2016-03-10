@@ -1,10 +1,20 @@
 package com.example.showtime.app;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.support.v7.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 
+import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+
+
+import com.example.showtime.app.service.NotifyService;
+
+import java.util.Calendar;
 
 /**
  * An activity representing a single Movie detail screen. This
@@ -15,7 +25,7 @@ import android.view.MenuItem;
  * This activity is mostly just a 'shell' activity containing nothing
  * more than a {@link MovieDetailFragment}.
  */
-public class MovieDetailActivity extends AppCompatActivity {
+public class MovieDetailActivity extends AppCompatActivity implements Button.OnClickListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +56,40 @@ public class MovieDetailActivity extends AppCompatActivity {
                     .add(R.id.movie_detail_container, fragment)
                     .commit();
         }
+    }
+
+    @Override
+    public void onClick(View view) {
+        createAlarm();
+    }
+
+    public void createAlarm()
+    {
+        Intent intent = new Intent(this, NotifyService.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
+        PendingIntent pendingIntent = PendingIntent.getService(this, 0, intent, 0);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, 12);
+        calendar.set(Calendar.MINUTE, 00);
+        calendar.set(Calendar.SECOND, 00);
+
+        //setCalendarTime(calendar);
+
+        alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis() + 100, pendingIntent);
+    }
+
+    public void setCalendarTime(Calendar calendar)
+    {
+        String releaseDate = MovieDetailFragment.myMovie.getReleaseDate();
+        String[] parts = releaseDate.split("-");
+
+        int year = Integer.parseInt(parts[0]);
+        int month = Integer.parseInt(parts[0]);
+        int day = Integer.parseInt(parts[0]);
+
+        calendar.set(year, month, day);
     }
 
     @Override
