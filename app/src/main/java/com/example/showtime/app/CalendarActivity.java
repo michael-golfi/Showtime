@@ -4,6 +4,7 @@ package com.example.showtime.app;
  * Created by alialnashashibi on 16-03-08.
  */
 
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
@@ -11,6 +12,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.CalendarView;
 import android.widget.CalendarView.OnDateChangeListener;
@@ -21,6 +23,7 @@ import com.example.showtime.app.model.Movie;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
 import com.roomorama.caldroid.CaldroidFragment;
+import com.roomorama.caldroid.CaldroidListener;
 
 import java.sql.SQLException;
 import java.text.DateFormat;
@@ -34,6 +37,7 @@ import java.util.List;
 public class CalendarActivity extends FragmentActivity{
     CalendarView calendar;
     private List<Movie> movies = new ArrayList<>();
+    DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 
     private DatabaseHelper databaseHelper = null;
     @Override
@@ -56,7 +60,6 @@ public class CalendarActivity extends FragmentActivity{
         try {
             Dao<Movie, Integer> moviesDao = databaseHelper.getMovieDao();
             movies = moviesDao.queryForAll();
-            DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 
             for(Movie movie: movies){
                 try {
@@ -74,6 +77,24 @@ public class CalendarActivity extends FragmentActivity{
             e.printStackTrace();
         }
 
+        final CaldroidListener listener = new CaldroidListener() {
+
+            @Override
+            public void onSelectDate(Date date, View view) {
+                Toast.makeText(getApplicationContext(), format.format(date),
+                        Toast.LENGTH_SHORT).show();
+                for(Movie movie: movies){
+                    if (movie.getReleaseDate().equals(format.format(date))){
+                        Intent detailIntent = new Intent(getApplicationContext(), MovieDetailActivity.class);
+                        detailIntent.putExtra(MovieDetailFragment.ARG_ITEM_ID, Integer.toString(movie.getId()));
+                        startActivity(detailIntent);
+                    }
+                }
+            }
+
+        };
+
+        caldroidFragment.setCaldroidListener(listener);
 
     }
     private DatabaseHelper getDatabaseHelper() {
