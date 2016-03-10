@@ -15,11 +15,11 @@ import com.example.showtime.app.service.GoogleCalendar;
 import com.example.showtime.app.service.MovieService;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import info.movito.themoviedbapi.model.MovieDb;
-import com.example.showtime.app.service.NotifyService;
 
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
@@ -37,8 +37,6 @@ public class MovieDetailFragment extends Fragment implements Button.OnClickListe
     public static final String ARG_ITEM_ID = "item_id";
 
     private Movie mItem;
-    // TODO: fix this
-    public static Movie myMovie;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -173,7 +171,6 @@ public class MovieDetailFragment extends Fragment implements Button.OnClickListe
         protected void onPostExecute(Movie result) {
             super.onPostExecute(result);
             mItem = result;
-            myMovie = mItem;
 
             if (!isInDatabase(result.getId()))
                 setAddMovieAttributes(result);
