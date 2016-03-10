@@ -4,4 +4,7 @@
     <string name="search_hint">Search For Movies</string>
     <string name="search_title">Search</string>
     <string name="title_search_results">Search Results</string>
+    <string name="delete_all">Delete All</string>
+    <string name="no_movies_added">No Movies Added</string>
+    <string name="title_activity_notification">NotificationActivity</string>
 </resources>

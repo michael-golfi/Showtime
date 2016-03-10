@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import android.widget.Toast;
 import com.example.showtime.app.model.DatabaseHelper;
 import com.example.showtime.app.model.Movie;
 import com.example.showtime.app.service.MovieService;
@@ -151,7 +152,6 @@ public class MovieListFragment extends ListFragment {
             throw new IllegalStateException("Activity must implement fragment's callbacks.");
         }
 
-
         mCallbacks = (Callbacks) activity;
     }
 
@@ -214,6 +214,30 @@ public class MovieListFragment extends ListFragment {
         mActivatedPosition = position;
     }
 
+    public void deleteAllMovies() {
+        databaseHelper = getDatabaseHelper();
+
+        try {
+            Dao<Movie, Integer> moviesDao = databaseHelper.getMovieDao();
+            movies = moviesDao.queryForAll();
+
+            if (movies.size() > 0) {
+                moviesDao.delete(movies);
+                movies.clear();
+
+                setListAdapter(new ArrayAdapter<>(
+                        getActivity(),
+                        android.R.layout.simple_list_item_activated_1,
+                        android.R.id.text1,
+                        movies));
+            } else {
+                Toast.makeText(getContext(), R.string.no_movies_added, Toast.LENGTH_LONG).show();
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
     private class getItemLists extends
             AsyncTask<String, String, List<Movie>> {
@@ -229,15 +253,20 @@ public class MovieListFragment extends ListFragment {
 
         @Override
         protected List<Movie> doInBackground(String... params) {
+
             MovieResultsPage results = MovieService.searchForMovies(params[0]);
             List<Movie> movies = new ArrayList<>();
-            for (MovieDb movie : results)
-                movies.add(new Movie(movie));
+
+            if (results != null) {
+                if (results.getResults().size() > 0) {
+                    for (MovieDb movie : results)
+                        movies.add(new Movie(movie));
+                } else {
+                    movies = MovieService.searchForMoviesByPerson(params[0]);
+                }
+            }
 
             return movies;
-
-            // TODO: fix this Nicolas ....
-            //return MovieService.getMoviesByDate(params[0], 2003);
         }
 
         @Override

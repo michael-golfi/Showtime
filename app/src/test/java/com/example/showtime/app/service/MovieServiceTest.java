@@ -60,34 +60,45 @@ public class MovieServiceTest {
 
     @Test
     public void testGetMoviesByActor() throws  Exception{
-        List<MovieDb> results = MovieService.getMoviesByActor("Leonardo Dicaprio");
-        assert results.get(0).getTitle().equals("Romeo + Juliet");
-        assert results.get(1).getTitle().equals("Titanic");
-
+        List<Movie> results = MovieService.getMoviesByActor("Leonardo Dicaprio");
+        assert results.size() > 0;
     }
 
     @Test
     public void testGetMoviesByActorWithNonExistingName(){
-        List<MovieDb> results = MovieService.getMoviesByActor("Titanic");
+        List<Movie> results = MovieService.getMoviesByActor("Titanic");
         assert results.size() == 0;
     }
 
     @Test
     public void testGetMoviesByDate(){
-        List<Movie> results = MovieService.getMoviesByDate("Batman", 2003);
-        assert results.size() == 4;
+        MovieResultsPage results = MovieService.getMoviesByDate("2003");
+        assert results.getResults().size() == 20;
     }
 
     @Test
-    public void testGetMoviesByInvalidDate(){
+    public void testGetMoviesByDateWithNegativedDate(){
+        MovieResultsPage results = MovieService.getMoviesByDate("-003");
+        if (results != null)
+        {
+            assert true;
+        }
+
+        results = MovieService.getMoviesByDate("-2003");
+
+        if (results != null)
+        {
+            assert true;
+        }
+    }
+
+    @Test
+    public void testGetMoviesByDateWithInvalidDate() {
         boolean assertIfTrue = false;
 
-        try
-        {
-            List<Movie> results = MovieService.getMoviesByDate("Batman", -2003);
-        }
-        catch (RuntimeException exception)
-        {
+        try {
+            MovieResultsPage results = MovieService.getMoviesByDate("a003");
+        } catch (RuntimeException NumberFormatException) {
             assertIfTrue = true;
         }
 
@@ -95,18 +106,14 @@ public class MovieServiceTest {
     }
 
     @Test
-    public void testGetMoviesByDateEmptyQuery(){
-        boolean assertIfTrue = false;
+    public void testGetMoviesByDirector() throws Exception{
+        List<Movie> results = MovieService.getMoviesByDirector("Martin Scorsese");
+        assert results.size() > 0;
+    }
 
-        try
-        {
-            List<Movie> results = MovieService.getMoviesByDate("", 2003);
-        }
-        catch (RuntimeException exception)
-        {
-            assertIfTrue = true;
-        }
-
-        assert assertIfTrue;
+    @Test
+    public  void testGetMoviesByDirectorWithNonExistingName() throws Exception{
+        List<Movie> results = MovieService.getMoviesByDirector("Shutter Island");
+        assert results.size() == 0;
     }
 }

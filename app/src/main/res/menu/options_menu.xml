@@ -12,6 +12,11 @@
         android:icon="@drawable/ic_history"
         app:showAsAction="ifRoom"/>
 
+    <item android:id="@+id/action_delete_all"
+          android:title="@string/delete_all"
+          android:icon="@drawable/ic_clear_white_24dp"
+          app:showAsAction="ifRoom"/>
+
     <item android:id="@+id/action_calendar"
         android:title="Calendar"
         android:icon="@drawable/ic_calendar"

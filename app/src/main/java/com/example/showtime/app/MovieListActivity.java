@@ -12,6 +12,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.support.v7.widget.SearchView;
+import android.widget.CalendarView;
+import com.example.showtime.app.model.DatabaseHelper;
+import com.j256.ormlite.android.apptools.OpenHelperManager;
+
 
 /**
  * An activity representing a list of Movies. This activity
@@ -69,6 +73,8 @@ public class MovieListActivity extends AppCompatActivity
             // In two-pane mode, show the detail view in this activity by
             // adding or replacing the detail fragment using a
             // fragment transaction.
+            Intent intent = new Intent(this, NotificationActivity.class);
+
             Bundle arguments = new Bundle();
             arguments.putString(MovieDetailFragment.ARG_ITEM_ID, id);
             MovieDetailFragment fragment = new MovieDetailFragment();
@@ -97,6 +103,27 @@ public class MovieListActivity extends AppCompatActivity
         searchView.setOnQueryTextListener(this);
         MenuItemCompat.setOnActionExpandListener(searchItem, this);
 
+        MenuItem calendarbutton = menu.findItem(R.id.action_calendar);
+        CalendarView calendarView = (CalendarView) MenuItemCompat.getActionView(calendarbutton);
+        calendarbutton.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                Intent intent = new Intent(MovieListActivity.this, CalendarActivity.class);
+                startActivity(intent);
+                return true;
+            }
+        });
+
+        MenuItem deleteAll = menu.findItem(R.id.action_delete_all);
+        deleteAll.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                MovieListFragment listFragment = ((MovieListFragment) getSupportFragmentManager().findFragmentById(R.id.movie_list));
+                listFragment.deleteAllMovies();
+                return true;
+            }
+        });
+
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -104,16 +131,18 @@ public class MovieListActivity extends AppCompatActivity
     public boolean onQueryTextSubmit(String query) {
         Log.d("MovieListActivity", "Search Submitted");
 
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        Fragment newFragment = new MovieListFragment(); //your search fragment
         if (query.length() > 2) {
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            Fragment newFragment = new MovieListFragment(); //your search fragment
+
             Bundle args = new Bundle();
             args.putString("query", query);
             newFragment.setArguments(args);
+
+            transaction.replace(R.id.movie_list, newFragment)
+                    .addToBackStack(null)
+                    .commit();
         }
-        transaction.replace(R.id.movie_list, newFragment)
-                .addToBackStack(null)
-                .commit();
 
         return false;
     }
