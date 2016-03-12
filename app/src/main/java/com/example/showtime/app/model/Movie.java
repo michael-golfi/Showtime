@@ -26,9 +26,9 @@ public class Movie {
     private float popularity;
 
     @DatabaseField
-    private String backdropPath;
+    private String backdropPath;*/
     @DatabaseField
-    private String posterPath;*/
+    private String posterPath;
 
     @DatabaseField
     private String releaseDate;
@@ -118,8 +118,8 @@ public class Movie {
         this.title = movie.getTitle();
 /*        this.originalTitle = movie.getOriginalTitle();
         this.popularity = movie.getPopularity();
-        this.backdropPath = movie.getBackdropPath();
-        this.posterPath = movie.getPosterPath();*/
+        this.backdropPath = movie.getBackdropPath();*/
+        this.posterPath = movie.getPosterPath();
         this.releaseDate = movie.getReleaseDate();
         /*this.adult = movie.isAdult();
         this.belongsToCollection = movie.getBelongsToCollection();
@@ -169,11 +169,11 @@ public class Movie {
 
     public String getBackdropPath() {
         return backdropPath;
-    }
+    }*/
 
     public String getPosterPath() {
         return posterPath;
-    }*/
+    }
 
     public String getReleaseDate() {
         return releaseDate;
