@@ -34,14 +34,16 @@ import com.j256.ormlite.android.apptools.OpenHelperManager;
  * to listen for item selections.
  */
 public class MovieListActivity extends AppCompatActivity
-        implements MovieListFragment.Callbacks, SearchView.OnQueryTextListener,
-        MenuItemCompat.OnActionExpandListener {
+        implements MovieListFragment.Callbacks, HistoryListFragment.Callbacks,
+        SearchView.OnQueryTextListener, MenuItemCompat.OnActionExpandListener {
 
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
      * device.
      */
     private boolean mTwoPane;
+
+    private SearchView searchView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +71,12 @@ public class MovieListActivity extends AppCompatActivity
      */
     @Override
     public void onItemSelected(String id) {
+        if (!searchView.isIconified()) {
+            Log.d("MovieListActivity", "Saved Query to Database");
+            //TODO: save search query to database
+            // use searchView.getQuery() to get the query string
+        }
+
         if (mTwoPane) {
             // In two-pane mode, show the detail view in this activity by
             // adding or replacing the detail fragment using a
@@ -99,7 +107,7 @@ public class MovieListActivity extends AppCompatActivity
 
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         MenuItem searchItem = menu.findItem(R.id.action_search);
-        SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         searchView.setOnQueryTextListener(this);
         MenuItemCompat.setOnActionExpandListener(searchItem, this);
 
@@ -124,7 +132,23 @@ public class MovieListActivity extends AppCompatActivity
             }
         });
 
+        MenuItem historybutton = menu.findItem(R.id.action_history);
+        historybutton.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                Fragment newFragment = new HistoryListFragment();
+                transaction.replace(R.id.movie_list, newFragment).commit();
+                return true;
+            }
+        });
+
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public void onQuerySelected(String query) {
+        onQueryTextSubmit(query);
     }
 
     @Override
@@ -134,7 +158,6 @@ public class MovieListActivity extends AppCompatActivity
         if (query.length() > 2) {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             Fragment newFragment = new MovieListFragment(); //your search fragment
-
             Bundle args = new Bundle();
             args.putString("query", query);
             newFragment.setArguments(args);
