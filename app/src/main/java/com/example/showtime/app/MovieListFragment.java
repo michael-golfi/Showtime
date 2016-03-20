@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,7 +34,7 @@ import java.util.List;
  * Activities containing this fragment MUST implement the {@link Callbacks}
  * interface.
  */
-public class MovieListFragment extends ListFragment {
+public class MovieListFragment extends ListFragment implements DisplayListFragment {
 
     /**
      * The serialization (saved instance state) Bundle key representing the
@@ -79,6 +80,8 @@ public class MovieListFragment extends ListFragment {
 
     private DatabaseHelper databaseHelper = null;
 
+    private String query = null;
+
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
@@ -91,7 +94,7 @@ public class MovieListFragment extends ListFragment {
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
         if (args != null) {
-            String query = args.getString("query");
+            query = args.getString("query");
             if (query != null) {
                 getItemLists gfl = new getItemLists();
                 gfl.execute(query);
@@ -176,6 +179,12 @@ public class MovieListFragment extends ListFragment {
     public void onListItemClick(ListView listView, View view, int position, long id) {
         super.onListItemClick(listView, view, position, id);
 
+        if (query != null) {
+            Log.d("MovieListFragment", "Saved Query to Database");
+            databaseHelper = getDatabaseHelper();
+            databaseHelper.createQuery(query);
+        }
+
         // Notify the active callbacks interface (the activity, if the
         // fragment is attached to one) that an item has been selected.
         String stringId = String.valueOf(movies.get(position).getId());
@@ -214,7 +223,7 @@ public class MovieListFragment extends ListFragment {
         mActivatedPosition = position;
     }
 
-    public void deleteAllMovies() {
+    public void deleteAllFromDB() {
         databaseHelper = getDatabaseHelper();
 
         try {

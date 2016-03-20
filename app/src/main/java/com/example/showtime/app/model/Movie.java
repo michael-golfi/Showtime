@@ -1,6 +1,8 @@
 package com.example.showtime.app.model;
 
 
+import android.util.Log;
+
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 import info.movito.themoviedbapi.model.MovieDb;
@@ -19,6 +21,12 @@ public class Movie implements MaterialElement {
     private String title;
 
     @DatabaseField
+    private String notes;
+
+    @DatabaseField
+    private String posterPath;
+
+    @DatabaseField
     private String releaseDate;
 
     @DatabaseField
@@ -33,6 +41,7 @@ public class Movie implements MaterialElement {
     public Movie(MovieDb movie) {
         this.id = movie.getId();
         this.title = movie.getTitle();
+        this.posterPath = movie.getPosterPath();
         this.releaseDate = movie.getReleaseDate();
         this.overview = movie.getOverview();
     }
@@ -43,6 +52,15 @@ public class Movie implements MaterialElement {
 
     public String getTitle() {
         return title;
+    }
+
+    public String getNotes() {
+        Log.d("Movie", "Retrieving notes:" + notes);
+        return this.notes;
+    }
+
+    public String getPosterPath() {
+        return posterPath;
     }
 
     public String getReleaseDate() {
@@ -71,6 +89,10 @@ public class Movie implements MaterialElement {
 
     public String toString() {
         return "M: " + title + " - " + releaseDate;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
     }
 
     @Override

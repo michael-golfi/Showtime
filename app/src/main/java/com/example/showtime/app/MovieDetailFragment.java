@@ -8,18 +8,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import com.example.showtime.app.model.DatabaseHelper;
 import com.example.showtime.app.model.Movie;
 import com.example.showtime.app.service.GoogleCalendar;
+import com.example.showtime.app.service.LoadMoviePoster;
 import com.example.showtime.app.service.MovieService;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import info.movito.themoviedbapi.model.MovieDb;
+import com.example.showtime.app.service.NotifyService;
 
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
@@ -37,6 +40,8 @@ public class MovieDetailFragment extends Fragment implements Button.OnClickListe
     public static final String ARG_ITEM_ID = "item_id";
 
     private Movie mItem;
+    // TODO: fix this
+    public static Movie myMovie;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -91,6 +96,7 @@ public class MovieDetailFragment extends Fragment implements Button.OnClickListe
         rootView = inflater.inflate(R.layout.fragment_movie_detail, container, false);
         rootView.findViewById(R.id.add).setOnClickListener(this);
         rootView.findViewById(R.id.export_btn).setOnClickListener(this);
+        rootView.findViewById(R.id.save_notes).setOnClickListener(this);
 
 
         return rootView;
@@ -120,6 +126,15 @@ public class MovieDetailFragment extends Fragment implements Button.OnClickListe
                 e.printStackTrace();
             }
         }
+        else if(clicked.getId() == R.id.save_notes){
+            try{
+                EditText notes_field = ((EditText) rootView.findViewById(R.id.notes_field));
+                String notes = notes_field.getText().toString();
+                getHelper().updateNotes(mItem.getId(),notes);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
     }
 
     public void createOrDeleteMovie(Movie movie) throws SQLException {
@@ -141,6 +156,15 @@ public class MovieDetailFragment extends Fragment implements Button.OnClickListe
         ((TextView) rootView.findViewById(R.id.release_date)).setText(result.getReleaseDate());
         ((TextView) rootView.findViewById(R.id.description)).setText(result.getOverview());
         ((Button) rootView.findViewById(R.id.add)).setText("Add");
+
+        ImageView imageView = (ImageView)rootView.findViewById(R.id.posterImage);
+        if (imageView != null)
+        {
+            LoadMoviePoster loadPoster = new LoadMoviePoster(result.getPosterPath(), imageView);
+            loadPoster.execute();
+        }
+        ((EditText) rootView.findViewById(R.id.notes_field)).setVisibility(View.GONE);
+        ((Button) rootView.findViewById(R.id.save_notes)).setVisibility(View.GONE);
     }
 
     public void setRemoveMovieAttributes(Movie result) {
@@ -148,6 +172,14 @@ public class MovieDetailFragment extends Fragment implements Button.OnClickListe
         ((TextView) rootView.findViewById(R.id.release_date)).setText(result.getReleaseDate());
         ((TextView) rootView.findViewById(R.id.description)).setText(result.getOverview());
         ((Button) rootView.findViewById(R.id.add)).setText("Remove");
+        ImageView imageView = (ImageView)rootView.findViewById(R.id.posterImage);
+        if (imageView != null)
+        {
+            LoadMoviePoster loadPoster = new LoadMoviePoster(result.getPosterPath(), imageView);
+            loadPoster.execute();
+        }
+
+        ((EditText) rootView.findViewById(R.id.notes_field)).setText(result.getNotes());
     }
 
     private class getItemLists extends
@@ -171,6 +203,7 @@ public class MovieDetailFragment extends Fragment implements Button.OnClickListe
         protected void onPostExecute(Movie result) {
             super.onPostExecute(result);
             mItem = result;
+            myMovie = mItem;
 
             if (!isInDatabase(result.getId()))
                 setAddMovieAttributes(result);
