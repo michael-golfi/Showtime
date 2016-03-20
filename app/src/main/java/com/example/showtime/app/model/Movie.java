@@ -1,6 +1,8 @@
 package com.example.showtime.app.model;
 
 
+import android.util.Log;
+
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 import info.movito.themoviedbapi.model.*;
@@ -119,7 +121,7 @@ public class Movie {
     public Movie(MovieDb movie) {
         this.id = movie.getId();
         this.title = movie.getTitle();
-        this.notes = "";
+        //this.notes = "";
 /*        this.originalTitle = movie.getOriginalTitle();
         this.popularity = movie.getPopularity();
         this.backdropPath = movie.getBackdropPath();*/
@@ -164,7 +166,8 @@ public class Movie {
     }
 
     public String getNotes(){
-        return  notes;
+        Log.d("Movie","Retrieving notes:"+notes);
+        return this.notes;
     }
 /*    public String getOriginalTitle() {
         return originalTitle;
@@ -310,6 +313,9 @@ public class Movie {
         this.overview = overview;
     }
 
+    public void setNotes (String notes){
+        this.notes = notes;
+    }
 
     public String toString(){
         return title + " - " + releaseDate;

@@ -96,6 +96,7 @@ public class MovieDetailFragment extends Fragment implements Button.OnClickListe
         rootView = inflater.inflate(R.layout.fragment_movie_detail, container, false);
         rootView.findViewById(R.id.add).setOnClickListener(this);
         rootView.findViewById(R.id.export_btn).setOnClickListener(this);
+        rootView.findViewById(R.id.save_notes).setOnClickListener(this);
 
 
         return rootView;
@@ -122,6 +123,15 @@ public class MovieDetailFragment extends Fragment implements Button.OnClickListe
                 startActivity(addToCalendar);
 
             } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+        else if(clicked.getId() == R.id.save_notes){
+            try{
+                EditText notes_field = ((EditText) rootView.findViewById(R.id.notes_field));
+                String notes = notes_field.getText().toString();
+                getHelper().updateNotes(mItem.getId(),notes);
+            }catch (Exception e){
                 e.printStackTrace();
             }
         }
@@ -153,6 +163,8 @@ public class MovieDetailFragment extends Fragment implements Button.OnClickListe
             LoadMoviePoster loadPoster = new LoadMoviePoster(result.getPosterPath(), imageView);
             loadPoster.execute();
         }
+        ((EditText) rootView.findViewById(R.id.notes_field)).setVisibility(View.GONE);
+        ((Button) rootView.findViewById(R.id.save_notes)).setVisibility(View.GONE);
     }
 
     public void setRemoveMovieAttributes(Movie result) {
@@ -167,7 +179,7 @@ public class MovieDetailFragment extends Fragment implements Button.OnClickListe
             loadPoster.execute();
         }
 
-        //((EditText) rootView.findViewById(R.id.notes_field)).
+        ((EditText) rootView.findViewById(R.id.notes_field)).setText(result.getNotes());
     }
 
     private class getItemLists extends

@@ -7,6 +7,7 @@ import android.util.Log;
 import com.example.showtime.app.R;
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.stmt.UpdateBuilder;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 
@@ -172,6 +173,21 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             e.printStackTrace();
         }
         return -1;
+    }
+
+    public void updateNotes(int id, String notes){
+        try {
+            Log.d("Database Helper", "Updating notes:"+notes);
+            if (movieDao == null) {
+                movieDao = getDao(Movie.class);
+            }
+            UpdateBuilder<Movie, Integer> updateBuilder = movieDao.updateBuilder();
+            updateBuilder.where().eq("id", id);
+            updateBuilder.updateColumnValue("notes" /* column */, notes /* value */);
+            updateBuilder.update();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
     @Override
     public void close() {
