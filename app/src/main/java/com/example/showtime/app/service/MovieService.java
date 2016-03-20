@@ -2,6 +2,7 @@ package com.example.showtime.app.service;
 
 import android.util.Log;
 
+import com.example.showtime.app.model.MaterialElement;
 import com.example.showtime.app.model.Movie;
 
 import org.apache.commons.codec.binary.StringUtils;
@@ -53,7 +54,7 @@ public class MovieService {
         return getMoviesByTitle(query);
     }
 
-    public static List<Movie> searchForMoviesByPerson(String query){
+    public static List<MaterialElement> searchForMoviesByPerson(String query){
         if(getMoviesByDirector(query).size() > 0){
             return getMoviesByDirector(query);
         }
@@ -79,11 +80,11 @@ public class MovieService {
         return api.getGenre().getGenreMovies(genreNumber, "en", 0, false);
     }
 
-    public static List<Movie> getMoviesByActor(String actor) {
+    public static List<MaterialElement> getMoviesByActor(String actor) {
         com.uwetrottmann.tmdb.entities.MovieResultsPage resultsPage;
         tmdb.setApiKey("0279053766dc7d93871419292081d94f");
         DiscoverService discoverService = tmdb.discoverService();
-        List<Movie> movieResults = new ArrayList<>();
+        List<MaterialElement> movieResults = new ArrayList<>();
         TmdbPeople.PersonResultsPage actorsResults = api.getSearch().searchPerson(actor, false, 0);
         if(actorsResults.getResults().size() == 0){
             return movieResults;
@@ -111,11 +112,11 @@ public class MovieService {
         return movieResults;
     }
 
-    public static List<Movie> getMoviesByDirector(String director) {
+    public static List<MaterialElement> getMoviesByDirector(String director) {
         com.uwetrottmann.tmdb.entities.MovieResultsPage resultsPage;
         tmdb.setApiKey("0279053766dc7d93871419292081d94f");
         DiscoverService discoverService = tmdb.discoverService();
-        List<Movie> movieResults = new ArrayList<>();
+        List<MaterialElement> movieResults = new ArrayList<>();
         TmdbPeople.PersonResultsPage directorsResults = api.getSearch().searchPerson(director, false, 0);
         if(directorsResults.getResults().size() == 0){
             return movieResults;

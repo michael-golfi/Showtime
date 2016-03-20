@@ -14,6 +14,7 @@ import android.widget.ListView;
 
 import android.widget.Toast;
 import com.example.showtime.app.model.DatabaseHelper;
+import com.example.showtime.app.model.MaterialElement;
 import com.example.showtime.app.model.Movie;
 import com.example.showtime.app.service.MovieService;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
@@ -76,7 +77,7 @@ public class MovieListFragment extends ListFragment implements DisplayListFragme
         }
     };
 
-    private List<Movie> movies = new ArrayList<>();
+    private List<MaterialElement> movies = new ArrayList<>();
 
     private DatabaseHelper databaseHelper = null;
 
@@ -105,7 +106,7 @@ public class MovieListFragment extends ListFragment implements DisplayListFragme
 
             try {
                 Dao<Movie, Integer> moviesDao = databaseHelper.getMovieDao();
-                movies = moviesDao.queryForAll();
+                movies = toMaterialElementList(moviesDao.queryForAll());
 
                 setListAdapter(new ArrayAdapter<>(
                         getActivity(),
@@ -118,6 +119,12 @@ public class MovieListFragment extends ListFragment implements DisplayListFragme
             }
         }
 
+    }
+
+    public List<MaterialElement> toMaterialElementList(List<Movie> movies) {
+        List<MaterialElement> materialElements = new ArrayList<>();
+        materialElements.addAll(movies);
+        return materialElements;
     }
 
     @Override
@@ -228,10 +235,10 @@ public class MovieListFragment extends ListFragment implements DisplayListFragme
 
         try {
             Dao<Movie, Integer> moviesDao = databaseHelper.getMovieDao();
-            movies = moviesDao.queryForAll();
+            movies = toMaterialElementList(moviesDao.queryForAll());
 
             if (movies.size() > 0) {
-                moviesDao.delete(movies);
+                moviesDao.delete(moviesDao.queryForAll());
                 movies.clear();
 
                 setListAdapter(new ArrayAdapter<>(
@@ -249,7 +256,7 @@ public class MovieListFragment extends ListFragment implements DisplayListFragme
     }
 
     private class getItemLists extends
-            AsyncTask<String, String, List<Movie>> {
+            AsyncTask<String, String, List<MaterialElement>> {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -261,10 +268,10 @@ public class MovieListFragment extends ListFragment implements DisplayListFragme
         }
 
         @Override
-        protected List<Movie> doInBackground(String... params) {
+        protected List<MaterialElement> doInBackground(String... params) {
 
             MovieResultsPage results = MovieService.searchForMovies(params[0]);
-            List<Movie> movies = new ArrayList<>();
+            List<MaterialElement> movies = new ArrayList<>();
 
             if (results != null) {
                 if (results.getResults().size() > 0) {
@@ -279,7 +286,7 @@ public class MovieListFragment extends ListFragment implements DisplayListFragme
         }
 
         @Override
-        protected void onPostExecute(List<Movie> result) {
+        protected void onPostExecute(List<MaterialElement> result) {
             super.onPostExecute(result);
             movies = result;
             setListAdapter(new ArrayAdapter<>(

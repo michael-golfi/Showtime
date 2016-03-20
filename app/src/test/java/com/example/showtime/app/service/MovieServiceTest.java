@@ -1,6 +1,7 @@
 package com.example.showtime.app.service;
 
 
+import com.example.showtime.app.model.MaterialElement;
 import com.example.showtime.app.model.Movie;
 
 import info.movito.themoviedbapi.model.MovieDb;
@@ -59,35 +60,33 @@ public class MovieServiceTest {
     }
 
     @Test
-    public void testGetMoviesByActor() throws  Exception{
-        List<Movie> results = MovieService.getMoviesByActor("Leonardo Dicaprio");
+    public void testGetMoviesByActor() throws Exception {
+        List<MaterialElement> results = MovieService.getMoviesByActor("Leonardo Dicaprio");
         assert results.size() > 0;
     }
 
     @Test
-    public void testGetMoviesByActorWithNonExistingName(){
-        List<Movie> results = MovieService.getMoviesByActor("Titanic");
+    public void testGetMoviesByActorWithNonExistingName() {
+        List<MaterialElement> results = MovieService.getMoviesByActor("Titanic");
         assert results.size() == 0;
     }
 
     @Test
-    public void testGetMoviesByDate(){
+    public void testGetMoviesByDate() {
         MovieResultsPage results = MovieService.getMoviesByDate("2003");
         assert results.getResults().size() == 20;
     }
 
     @Test
-    public void testGetMoviesByDateWithNegativedDate(){
+    public void testGetMoviesByDateWithNegativedDate() {
         MovieResultsPage results = MovieService.getMoviesByDate("-003");
-        if (results != null)
-        {
+        if (results != null) {
             assert true;
         }
 
         results = MovieService.getMoviesByDate("-2003");
 
-        if (results != null)
-        {
+        if (results != null) {
             assert true;
         }
     }
@@ -106,14 +105,14 @@ public class MovieServiceTest {
     }
 
     @Test
-    public void testGetMoviesByDirector() throws Exception{
-        List<Movie> results = MovieService.getMoviesByDirector("Martin Scorsese");
+    public void testGetMoviesByDirector() throws Exception {
+        List<MaterialElement> results = MovieService.getMoviesByDirector("Martin Scorsese");
         assert results.size() > 0;
     }
 
     @Test
-    public  void testGetMoviesByDirectorWithNonExistingName() throws Exception{
-        List<Movie> results = MovieService.getMoviesByDirector("Shutter Island");
+    public void testGetMoviesByDirectorWithNonExistingName() throws Exception {
+        List<MaterialElement> results = MovieService.getMoviesByDirector("Shutter Island");
         assert results.size() == 0;
     }
 }
