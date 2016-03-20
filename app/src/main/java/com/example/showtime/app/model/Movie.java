@@ -33,7 +33,7 @@ public class Movie implements MaterialElement {
     private String overview;
 
     @DatabaseField
-    private MediaType mediaType;
+    private MediaType mediaType = MediaType.MOVIE;
 
     public Movie() {
     }

@@ -30,6 +30,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     private Dao<Query, Integer> queryDao = null;
 
+    private Dao<TvShow, Integer> tvDao = null;
+
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION, R.raw.ormlite_config);
     }
@@ -43,6 +45,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         try {
             Log.i(DatabaseHelper.class.getName(), "onCreate");
             TableUtils.createTable(connectionSource, Movie.class);
+            TableUtils.clearTable(connectionSource,TvShow.class);
             TableUtils.createTable(connectionSource, Query.class);
         } catch (SQLException e) {
             Log.e(DatabaseHelper.class.getName(), "Can't create database", e);
@@ -56,6 +59,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         try {
             Log.i(DatabaseHelper.class.getName(), "onUpgrade");
             TableUtils.dropTable(connectionSource, Movie.class, true);
+            TableUtils.dropTable(connectionSource, TvShow.class, true);
             TableUtils.dropTable(connectionSource, Query.class, true);
             // after we drop the old databases, we create the new ones
             onCreate(database, connectionSource);
@@ -75,6 +79,18 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         }
         return movieDao;
     }
+    /**
+     * Returns the Database Access Object (DAO) for our Tv class. It will create it or just give the cached
+     * value.
+     */
+    public Dao<TvShow, Integer> getTvDaoDao() throws SQLException {
+        if (movieDao == null) {
+            movieDao = getDao(Movie.class);
+        }
+        return tvDao;
+    }
+
+
 
     /**
      * Returns a list of past Queries in order of recency (newest to oldest)
@@ -128,6 +144,17 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         }
     }
 
+    public void createTv(TvShow tvShow){
+        try{
+            if(tvDao == null){
+                tvDao = getDao(TvShow.class);
+            }
+            tvDao.createIfNotExists(tvShow);
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+    }
+
     public Movie getMovie(int id) {
         try {
             if (movieDao == null) {
@@ -135,6 +162,18 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             }
             return movieDao.queryForId(id);
         } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public TvShow getTvShow(int id){
+        try{
+            if(tvDao == null){
+                tvDao =getDao(TvShow.class);
+            }
+            return tvDao.queryForId(id);
+        }catch (SQLException e){
             e.printStackTrace();
         }
         return null;
@@ -151,6 +190,17 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         }
     }
 
+    public void deleteTvShow(int id){
+        try{
+            if (tvDao == null){
+                tvDao = getDao(TvShow.class);
+            }
+            tvDao.deleteById(id);
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+    }
+
     public boolean movieExists(int id) {
         try {
             if (movieDao == null) {
@@ -158,6 +208,17 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             }
             return movieDao.idExists(id);
         } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+    public boolean tvShowExists (int id){
+        try{
+            if (tvDao == null){
+                tvDao = getDao(TvShow.class);
+            }
+            return  tvDao.idExists(id);
+        }catch (SQLException e){
             e.printStackTrace();
         }
         return false;
@@ -170,6 +231,18 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             }
             return movieDao.countOf();
         } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
+    public  long getCountOfTvShow(){
+        try{
+            if (tvDao == null){
+                tvDao = getDao(TvShow.class);
+            }
+            return tvDao.countOf();
+
+        }catch (SQLException e){
             e.printStackTrace();
         }
         return -1;
@@ -194,5 +267,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         super.close();
         movieDao = null;
         queryDao = null;
+        tvDao = null;
     }
 }
