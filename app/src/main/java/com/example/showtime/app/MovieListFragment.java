@@ -34,7 +34,7 @@ import java.util.List;
  * Activities containing this fragment MUST implement the {@link Callbacks}
  * interface.
  */
-public class MovieListFragment extends ListFragment {
+public class MovieListFragment extends ListFragment implements DisplayListFragment {
 
     /**
      * The serialization (saved instance state) Bundle key representing the
@@ -181,8 +181,8 @@ public class MovieListFragment extends ListFragment {
 
         if (query != null) {
             Log.d("MovieListFragment", "Saved Query to Database");
-            //TODO: save query to database
-            // something like database.save(query)...
+            databaseHelper = getDatabaseHelper();
+            databaseHelper.createQuery(query);
         }
 
         // Notify the active callbacks interface (the activity, if the
@@ -223,7 +223,7 @@ public class MovieListFragment extends ListFragment {
         mActivatedPosition = position;
     }
 
-    public void deleteAllMovies() {
+    public void deleteAllFromDB() {
         databaseHelper = getDatabaseHelper();
 
         try {

@@ -119,8 +119,8 @@ public class MovieListActivity extends AppCompatActivity
         deleteAll.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
-                MovieListFragment listFragment = ((MovieListFragment) getSupportFragmentManager().findFragmentById(R.id.movie_list));
-                listFragment.deleteAllMovies();
+                DisplayListFragment listFragment = ((DisplayListFragment) getSupportFragmentManager().findFragmentById(R.id.movie_list));
+                listFragment.deleteAllFromDB();
                 return true;
             }
         });
