@@ -262,6 +262,21 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             e.printStackTrace();
         }
     }
+
+    public void updateTVNotes(int id, String notes){
+        try {
+            Log.d("Database Helper", "Updating TV notes:"+notes);
+            if (tvDao == null) {
+                tvDao = getDao(TvShow.class);
+            }
+            UpdateBuilder<TvShow, Integer> updateBuilder = tvDao.updateBuilder();
+            updateBuilder.where().eq("id", id);
+            updateBuilder.updateColumnValue("notes" /* column */, notes /* value */);
+            updateBuilder.update();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
     @Override
     public void close() {
         super.close();
