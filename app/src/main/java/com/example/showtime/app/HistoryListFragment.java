@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.example.showtime.app.model.DatabaseHelper;
+import com.example.showtime.app.model.Query;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 
 import java.sql.SQLException;
@@ -23,7 +24,7 @@ import java.util.List;
  * Activities containing this fragment MUST implement the {@link Callbacks}
  * interface.
  */
-public class HistoryListFragment extends ListFragment {
+public class HistoryListFragment extends ListFragment implements DisplayListFragment {
 
     /**
      * The fragment's current callback object, which is notified of list item
@@ -49,7 +50,7 @@ public class HistoryListFragment extends ListFragment {
         }
     };
 
-    private List<String> queries = new ArrayList<>();
+    private List<Query> queries = new ArrayList<>();
 
     private DatabaseHelper databaseHelper = null;
 
@@ -57,15 +58,18 @@ public class HistoryListFragment extends ListFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //TODO: hardcoded entry for now, replace once we have database support
-        queries.add(0, "bat");
-        queries.add(0, "super");
+        databaseHelper = getDatabaseHelper();
+        try {
+            queries = databaseHelper.getQueries();
 
-        setListAdapter(new ArrayAdapter<>(
-                getActivity(),
-                android.R.layout.simple_list_item_activated_1,
-                android.R.id.text1,
-                queries));
+            setListAdapter(new ArrayAdapter<>(
+                    getActivity(),
+                    android.R.layout.simple_list_item_activated_1,
+                    android.R.id.text1,
+                    queries));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -118,7 +122,21 @@ public class HistoryListFragment extends ListFragment {
 
         // Notify the active callbacks interface (the activity, if the
         // fragment is attached to one) that an item has been selected.
-        String query = queries.get(position);
+        String query = queries.get(position).getQuery();
         mCallbacks.onQuerySelected(query);
     }
+
+    @Override
+    public void deleteAllFromDB() {
+        databaseHelper = getDatabaseHelper();
+        databaseHelper.deleteQueries();
+        queries.clear();
+
+        setListAdapter(new ArrayAdapter<>(
+                getActivity(),
+                android.R.layout.simple_list_item_activated_1,
+                android.R.id.text1,
+                queries));
+    }
+
 }
