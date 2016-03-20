@@ -1,9 +1,12 @@
 package com.example.showtime.app.model;
 
 import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+
 import info.movito.themoviedbapi.model.Multi;
 import info.movito.themoviedbapi.model.tv.TvSeries;
 
+@DatabaseTable(tableName = "tvShows")
 public class TvShow implements MaterialElement {
 
     @DatabaseField(id = true)

@@ -45,7 +45,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         try {
             Log.i(DatabaseHelper.class.getName(), "onCreate");
             TableUtils.createTable(connectionSource, Movie.class);
-            TableUtils.clearTable(connectionSource,TvShow.class);
+            TableUtils.createTable(connectionSource,TvShow.class);
             TableUtils.createTable(connectionSource, Query.class);
         } catch (SQLException e) {
             Log.e(DatabaseHelper.class.getName(), "Can't create database", e);
