@@ -43,8 +43,6 @@ public class MovieListActivity extends AppCompatActivity
      */
     private boolean mTwoPane;
 
-    private SearchView searchView;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,11 +69,6 @@ public class MovieListActivity extends AppCompatActivity
      */
     @Override
     public void onItemSelected(String id) {
-        if (!searchView.isIconified()) {
-            Log.d("MovieListActivity", "Saved Query to Database");
-            //TODO: save search query to database
-            // use searchView.getQuery() to get the query string
-        }
 
         if (mTwoPane) {
             // In two-pane mode, show the detail view in this activity by
@@ -107,7 +100,7 @@ public class MovieListActivity extends AppCompatActivity
 
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         MenuItem searchItem = menu.findItem(R.id.action_search);
-        searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         searchView.setOnQueryTextListener(this);
         MenuItemCompat.setOnActionExpandListener(searchItem, this);
 

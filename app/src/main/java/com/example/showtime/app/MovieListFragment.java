@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -79,6 +80,8 @@ public class MovieListFragment extends ListFragment {
 
     private DatabaseHelper databaseHelper = null;
 
+    private String query = null;
+
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
@@ -91,7 +94,7 @@ public class MovieListFragment extends ListFragment {
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
         if (args != null) {
-            String query = args.getString("query");
+            query = args.getString("query");
             if (query != null) {
                 getItemLists gfl = new getItemLists();
                 gfl.execute(query);
@@ -175,6 +178,12 @@ public class MovieListFragment extends ListFragment {
     @Override
     public void onListItemClick(ListView listView, View view, int position, long id) {
         super.onListItemClick(listView, view, position, id);
+
+        if (query != null) {
+            Log.d("MovieListFragment", "Saved Query to Database");
+            //TODO: save query to database
+            // something like database.save(query)...
+        }
 
         // Notify the active callbacks interface (the activity, if the
         // fragment is attached to one) that an item has been selected.
