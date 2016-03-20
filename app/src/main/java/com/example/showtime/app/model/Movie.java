@@ -19,6 +19,9 @@ public class Movie {
 
     @DatabaseField
     private String title;
+
+    @DatabaseField
+    private String notes;
 /*    @DatabaseField
     private String originalTitle;
 
@@ -116,6 +119,7 @@ public class Movie {
     public Movie(MovieDb movie) {
         this.id = movie.getId();
         this.title = movie.getTitle();
+        this.notes = "";
 /*        this.originalTitle = movie.getOriginalTitle();
         this.popularity = movie.getPopularity();
         this.backdropPath = movie.getBackdropPath();*/
@@ -159,6 +163,9 @@ public class Movie {
         return title;
     }
 
+    public String getNotes(){
+        return  notes;
+    }
 /*    public String getOriginalTitle() {
         return originalTitle;
     }

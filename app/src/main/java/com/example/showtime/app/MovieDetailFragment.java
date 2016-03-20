@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.example.showtime.app.model.DatabaseHelper;
@@ -159,6 +160,14 @@ public class MovieDetailFragment extends Fragment implements Button.OnClickListe
         ((TextView) rootView.findViewById(R.id.release_date)).setText(result.getReleaseDate());
         ((TextView) rootView.findViewById(R.id.description)).setText(result.getOverview());
         ((Button) rootView.findViewById(R.id.add)).setText("Remove");
+        ImageView imageView = (ImageView)rootView.findViewById(R.id.posterImage);
+        if (imageView != null)
+        {
+            LoadMoviePoster loadPoster = new LoadMoviePoster(result.getPosterPath(), imageView);
+            loadPoster.execute();
+        }
+
+        //((EditText) rootView.findViewById(R.id.notes_field)).
     }
 
     private class getItemLists extends
