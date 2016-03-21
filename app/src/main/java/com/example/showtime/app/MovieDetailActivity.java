@@ -49,6 +49,8 @@ public class MovieDetailActivity extends AppCompatActivity implements Button.OnC
             Bundle arguments = new Bundle();
             arguments.putString(MovieDetailFragment.ARG_ITEM_ID,
                     getIntent().getStringExtra(MovieDetailFragment.ARG_ITEM_ID));
+            arguments.putString(MovieDetailFragment.ARG_ITEM_TYPE,
+                    getIntent().getStringExtra(MovieDetailFragment.ARG_ITEM_TYPE));
             MovieDetailFragment fragment = new MovieDetailFragment();
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()
@@ -62,11 +64,10 @@ public class MovieDetailActivity extends AppCompatActivity implements Button.OnC
         createAlarm();
     }
 
-    public void createAlarm()
-    {
+    public void createAlarm() {
         Intent intent = new Intent(this, NotifyService.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         PendingIntent pendingIntent = PendingIntent.getService(this, 0, intent, 0);
 
         Calendar calendar = Calendar.getInstance();
@@ -80,8 +81,7 @@ public class MovieDetailActivity extends AppCompatActivity implements Button.OnC
         CreateNotification();
     }
 
-    public void setCalendarTime(Calendar calendar)
-    {
+    public void setCalendarTime(Calendar calendar) {
         String releaseDate = MovieDetailFragment.myMovie.getReleaseDate();
         String[] parts = releaseDate.split("-");
 
@@ -92,8 +92,7 @@ public class MovieDetailActivity extends AppCompatActivity implements Button.OnC
         calendar.set(year, month, day);
     }
 
-    public void CreateNotification()
-    {
+    public void CreateNotification() {
         Intent intent = new Intent(this, MovieDetailActivity.class);
         PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, 0);
 

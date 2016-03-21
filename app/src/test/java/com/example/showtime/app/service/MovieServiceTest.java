@@ -3,7 +3,8 @@ package com.example.showtime.app.service;
 
 import com.example.showtime.app.model.MaterialElement;
 import com.example.showtime.app.model.Movie;
-import info.movito.themoviedbapi.model.MovieDb;
+import com.example.showtime.app.model.TvShow;
+import info.movito.themoviedbapi.model.Multi;
 import org.junit.Test;
 
 import java.util.List;
@@ -12,15 +13,31 @@ public class MovieServiceTest {
 
     @Test
     public void testGetMoviesByTitle() throws Exception {
-        List<MaterialElement> movies = MovieService.getMoviesByTitle("Superman");
+        List<MaterialElement> movies = MovieService.getMaterialElementsByTitle("Superman");
         assert movies.size() > 10;
         assert movies.get(0).getTitle().equals("Superman");
+
+        boolean containsTvShow = false, containsMovie = false;
+        for (MaterialElement materialElement : movies)
+            if (materialElement.getMediaType() == Multi.MediaType.TV_SERIES)
+                containsTvShow = true;
+            else if (materialElement.getMediaType() == Multi.MediaType.MOVIE)
+                containsMovie = true;
+
+        assert containsMovie;
+        assert containsTvShow;
     }
 
     @Test
     public void testGetMoviesById() throws Exception {
         Movie movie = MovieService.getMovieDetailsById(5354);
         assert movie.getTitle().equals("Berlin am Meer");
+    }
+
+    @Test
+    public void testGetTvShowById() throws Exception {
+        TvShow tvShow = MovieService.getTvShowDetailsById(43136);
+        assert tvShow.getTitle().equals("Superman");
     }
 
     @Test

@@ -15,6 +15,7 @@ import android.support.v7.widget.SearchView;
 import android.widget.CalendarView;
 import com.example.showtime.app.model.DatabaseHelper;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
+import info.movito.themoviedbapi.model.Multi;
 
 
 /**
@@ -68,7 +69,7 @@ public class MovieListActivity extends AppCompatActivity
      * indicating that the item with the given ID was selected.
      */
     @Override
-    public void onItemSelected(String id) {
+    public void onItemSelected(String id, String mediaType) {
 
         if (mTwoPane) {
             // In two-pane mode, show the detail view in this activity by
@@ -78,6 +79,7 @@ public class MovieListActivity extends AppCompatActivity
 
             Bundle arguments = new Bundle();
             arguments.putString(MovieDetailFragment.ARG_ITEM_ID, id);
+            arguments.putString(MovieDetailFragment.ARG_ITEM_TYPE, mediaType);
             MovieDetailFragment fragment = new MovieDetailFragment();
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()
@@ -89,6 +91,7 @@ public class MovieListActivity extends AppCompatActivity
             // for the selected item ID.
             Intent detailIntent = new Intent(this, MovieDetailActivity.class);
             detailIntent.putExtra(MovieDetailFragment.ARG_ITEM_ID, id);
+            detailIntent.putExtra(MovieDetailFragment.ARG_ITEM_TYPE, mediaType);
             startActivity(detailIntent);
         }
     }

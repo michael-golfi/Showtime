@@ -12,13 +12,14 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.example.showtime.app.model.DatabaseHelper;
+import com.example.showtime.app.model.MaterialElement;
 import com.example.showtime.app.model.Movie;
+import com.example.showtime.app.model.TvShow;
 import com.example.showtime.app.service.GoogleCalendar;
 import com.example.showtime.app.service.LoadMoviePoster;
 import com.example.showtime.app.service.MovieService;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
-import info.movito.themoviedbapi.model.MovieDb;
-import com.example.showtime.app.service.NotifyService;
+import info.movito.themoviedbapi.model.Multi;
 
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -38,10 +39,11 @@ public class MovieDetailFragment extends Fragment implements Button.OnClickListe
      * represents.
      */
     public static final String ARG_ITEM_ID = "item_id";
+    public static final String ARG_ITEM_TYPE = "item_type";
 
-    private Movie mItem;
+    private MaterialElement mItem;
     // TODO: fix this
-    public static Movie myMovie;
+    public static MaterialElement myMovie;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -64,7 +66,7 @@ public class MovieDetailFragment extends Fragment implements Button.OnClickListe
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (getArguments().containsKey(ARG_ITEM_ID)) {
+        if (getArguments().containsKey(ARG_ITEM_ID) && getArguments().containsKey(ARG_ITEM_TYPE)) {
             // Load the dummy content specified by the fragment
             // arguments. In a real-world scenario, use a Loader
             // to load content from a content provider.
@@ -73,20 +75,28 @@ public class MovieDetailFragment extends Fragment implements Button.OnClickListe
       The dummy content this fragment is presenting.
      */
             String movieId = getArguments().getString(ARG_ITEM_ID);
+            String mediaType = getArguments().getString(ARG_ITEM_TYPE);
             getItemLists gl = new getItemLists();
-            gl.execute(movieId);
+            gl.execute(movieId, mediaType);
         }
     }
 
-    private Movie getFromDatabaseOrOnline(String movieId) {
+    private MaterialElement getFromDatabaseOrOnline(String movieId, String mediaType) {
         int id = Integer.parseInt(movieId);
-        Movie movie;
-        if (isInDatabase(id)) {
-            movie = getHelper().getMovie(id);
-        } else
-            movie = MovieService.getMovieDetailsById(id);
+        MaterialElement materialElement;
 
-        return movie;
+        if (mediaType.equals(Multi.MediaType.MOVIE.toString()) && movieIsInDatabase(id)) {
+            materialElement = getHelper().getMovie(id);
+        } else if (mediaType.equals(Multi.MediaType.MOVIE.toString()))
+            materialElement = MovieService.getMovieDetailsById(id);
+        else if (mediaType.equals(Multi.MediaType.TV_SERIES.toString()) && tvShowIsInDatabase(id)) {
+            materialElement = getHelper().getTvShow(id);
+        } else if (mediaType.equals(Multi.MediaType.TV_SERIES.toString()))
+            materialElement = MovieService.getTvShowDetailsById(id);
+        else
+            materialElement = null;
+
+        return materialElement;
     }
 
     @Override
@@ -106,7 +116,7 @@ public class MovieDetailFragment extends Fragment implements Button.OnClickListe
         Button clicked = ((Button) v);
         if (clicked.getId() == R.id.add) {
             try {
-                createOrDeleteMovie(mItem);
+                createOrDeleteMaterialElement(mItem);
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -135,21 +145,35 @@ public class MovieDetailFragment extends Fragment implements Button.OnClickListe
         }
     }
 
-    public void createOrDeleteMovie(Movie movie) throws SQLException {
-        if (!isInDatabase(mItem.getId())) {
-            getHelper().createMovie(mItem);
-            setRemoveMovieAttributes(movie);
-        } else {
-            getHelper().deleteMovie(mItem.getId());
-            setAddMovieAttributes(movie);
-        }
+    public void createOrDeleteMaterialElement(MaterialElement materialElement) throws SQLException {
+        if (materialElement.getMediaType() == Multi.MediaType.MOVIE)
+            if (!movieIsInDatabase(mItem.getId())) {
+                getHelper().createMovie((Movie) mItem);
+                setRemoveMovieAttributes(materialElement);
+            } else if (movieIsInDatabase(mItem.getId())) {
+                getHelper().deleteMovie(mItem.getId());
+                setAddMovieAttributes(materialElement);
+            }
+
+        if (materialElement.getMediaType() == Multi.MediaType.TV_SERIES)
+            if (!tvShowIsInDatabase(mItem.getId())) {
+                getHelper().createTv((TvShow) mItem);
+                setRemoveMovieAttributes(materialElement);
+            } else if (tvShowIsInDatabase(mItem.getId())) {
+                getHelper().deleteTvShow(mItem.getId());
+                setAddMovieAttributes(mItem);
+            }
     }
 
-    public boolean isInDatabase(int id) {
+    public boolean movieIsInDatabase(int id) {
         return getHelper().movieExists(id);
     }
 
-    public void setAddMovieAttributes(Movie result) {
+    public boolean tvShowIsInDatabase(int id) {
+        return getHelper().tvShowExists(id);
+    }
+
+    public void setAddMovieAttributes(MaterialElement result) {
         ((TextView) rootView.findViewById(R.id.title)).setText(result.getTitle());
         ((TextView) rootView.findViewById(R.id.release_date)).setText(result.getReleaseDate());
         ((TextView) rootView.findViewById(R.id.description)).setText(result.getOverview());
@@ -164,7 +188,7 @@ public class MovieDetailFragment extends Fragment implements Button.OnClickListe
         ((Button) rootView.findViewById(R.id.save_notes)).setVisibility(View.GONE);
     }
 
-    public void setRemoveMovieAttributes(Movie result) {
+    public void setRemoveMovieAttributes(MaterialElement result) {
         ((TextView) rootView.findViewById(R.id.title)).setText(result.getTitle());
         ((TextView) rootView.findViewById(R.id.release_date)).setText(result.getReleaseDate());
         ((TextView) rootView.findViewById(R.id.description)).setText(result.getOverview());
@@ -173,13 +197,13 @@ public class MovieDetailFragment extends Fragment implements Button.OnClickListe
         if (imageView != null) {
             LoadMoviePoster loadPoster = new LoadMoviePoster(result.getPosterPath(), imageView);
             loadPoster.execute();
-        }
 
-        ((EditText) rootView.findViewById(R.id.notes_field)).setText(result.getNotes());
+            ((EditText) rootView.findViewById(R.id.notes_field)).setText(((Movie) result).getNotes());
+        }
     }
 
     private class getItemLists extends
-            AsyncTask<String, String, Movie> {
+            AsyncTask<String, String, MaterialElement> {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -191,17 +215,17 @@ public class MovieDetailFragment extends Fragment implements Button.OnClickListe
         }
 
         @Override
-        protected Movie doInBackground(String... params) {
-            return getFromDatabaseOrOnline(params[0]);
+        protected MaterialElement doInBackground(String... params) {
+            return getFromDatabaseOrOnline(params[0], params[1]);
         }
 
         @Override
-        protected void onPostExecute(Movie result) {
+        protected void onPostExecute(MaterialElement result) {
             super.onPostExecute(result);
             mItem = result;
             myMovie = mItem;
 
-            if (!isInDatabase(result.getId()))
+            if (!movieIsInDatabase(result.getId()))
                 setAddMovieAttributes(result);
             else
                 setRemoveMovieAttributes(result);

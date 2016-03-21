@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-
 import android.widget.Toast;
 import com.example.showtime.app.model.DatabaseHelper;
 import com.example.showtime.app.model.MaterialElement;
@@ -19,9 +18,7 @@ import com.example.showtime.app.model.Movie;
 import com.example.showtime.app.service.MovieService;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
-import info.movito.themoviedbapi.model.MovieDb;
 import info.movito.themoviedbapi.model.Multi;
-import info.movito.themoviedbapi.model.core.MovieResultsPage;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -64,7 +61,7 @@ public class MovieListFragment extends ListFragment implements DisplayListFragme
         /**
          * Callback for when an item has been selected.
          */
-        public void onItemSelected(String id);
+        public void onItemSelected(String id, String mediaType);
     }
 
     /**
@@ -73,7 +70,7 @@ public class MovieListFragment extends ListFragment implements DisplayListFragme
      */
     private static Callbacks sDummyCallbacks = new Callbacks() {
         @Override
-        public void onItemSelected(String id) {
+        public void onItemSelected(String id, String mediaType) {
 
         }
     };
@@ -196,7 +193,8 @@ public class MovieListFragment extends ListFragment implements DisplayListFragme
         // Notify the active callbacks interface (the activity, if the
         // fragment is attached to one) that an item has been selected.
         String stringId = String.valueOf(movies.get(position).getId());
-        mCallbacks.onItemSelected(stringId);
+        String mediaType = movies.get(position).getMediaType().toString();
+        mCallbacks.onItemSelected(stringId, mediaType);
     }
 
     @Override

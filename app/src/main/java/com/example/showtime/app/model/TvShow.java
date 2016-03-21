@@ -12,7 +12,7 @@ public class TvShow implements MaterialElement {
     private int id;
 
     @DatabaseField
-    private String title, notes, overview, releaseDate;
+    private String title, notes, overview, releaseDate, posterPath;
 
     @DatabaseField
     private MediaType mediaType = MediaType.TV_SERIES;
@@ -26,6 +26,7 @@ public class TvShow implements MaterialElement {
         this.title = series.getName();
         this.overview = series.getOverview();
         this.releaseDate = series.getFirstAirDate();
+        this.posterPath = series.getPosterPath();
     }
 
     @Override
@@ -61,6 +62,11 @@ public class TvShow implements MaterialElement {
     public String getNotes() {
         Log.d("TvShow", "Retrieving notes:" + notes);
         return this.notes;
+    }
+
+    @Override
+    public String getPosterPath() {
+        return this.posterPath;
     }
 
     @Override

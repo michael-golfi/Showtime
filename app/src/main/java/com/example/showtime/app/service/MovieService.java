@@ -1,10 +1,7 @@
 package com.example.showtime.app.service;
 
 import android.util.Log;
-import com.example.showtime.app.model.MaterialElement;
-import com.example.showtime.app.model.MaterialElementList;
-import com.example.showtime.app.model.Movie;
-import com.example.showtime.app.model.MovieList;
+import com.example.showtime.app.model.*;
 import com.uwetrottmann.tmdb.Tmdb;
 import com.uwetrottmann.tmdb.entities.AppendToDiscoverResponse;
 import com.uwetrottmann.tmdb.enumerations.SortBy;
@@ -39,7 +36,7 @@ public class MovieService {
             return MaterialElementList.movieListToMaterialElementList(getMoviesByDate(query));
 
         // By default, get movies by title
-        return getMoviesByTitle(query);
+        return getMaterialElementsByTitle(query);
     }
 
     public static List<MaterialElement> searchForMoviesByPerson(String query) {
@@ -50,12 +47,16 @@ public class MovieService {
         }
     }
 
-    public static List<MaterialElement> getMoviesByTitle(String query) {
+    public static List<MaterialElement> getMaterialElementsByTitle(String query) {
         return MaterialElementList.multiListToMaterialElementList(api.getSearch().searchMulti(query, "en", 0).getResults());
     }
 
     public static Movie getMovieDetailsById(int id) {
         return new Movie(api.getMovies().getMovie(id, "en"));
+    }
+
+    public static TvShow getTvShowDetailsById(int id) {
+        return new TvShow(api.getTvSeries().getSeries(id, "en"));
     }
 
     public static List<Movie> getMoviesByGenre(String genre) throws IllegalArgumentException {
