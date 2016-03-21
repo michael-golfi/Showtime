@@ -17,6 +17,10 @@ public interface MaterialElement extends Multi {
 
     String getPosterPath();
 
+    String getNotes();
+
+    void setNotes(String notes);
+
     void setId(int id);
 
     void setTitle(String title);

@@ -65,6 +65,11 @@ public class TvShow implements MaterialElement {
     }
 
     @Override
+    public void setNotes(String notes) {
+        this.notes = notes;
+    }
+
+    @Override
     public String getPosterPath() {
         return this.posterPath;
     }
