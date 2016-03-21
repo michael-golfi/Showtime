@@ -19,6 +19,13 @@ public class MaterialElementList {
         return materialElements;
     }
 
+    public static List<MaterialElement> tvShowListToMaterialElementList(List<TvShow> movies) {
+        List<MaterialElement> materialElements = new ArrayList<>();
+        for (TvShow show : movies)
+            materialElements.add(show);
+        return materialElements;
+    }
+
     public static List<MaterialElement> multiListToMaterialElementList(List<Multi> movies) {
         List<MaterialElement> materialElements = new ArrayList<>();
         for (Multi movie : movies) {

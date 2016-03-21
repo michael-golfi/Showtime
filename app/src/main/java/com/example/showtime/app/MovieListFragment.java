@@ -12,13 +12,10 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
-import com.example.showtime.app.model.DatabaseHelper;
-import com.example.showtime.app.model.MaterialElement;
-import com.example.showtime.app.model.Movie;
+import com.example.showtime.app.model.*;
 import com.example.showtime.app.service.MovieService;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
-import info.movito.themoviedbapi.model.Multi;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -103,8 +100,12 @@ public class MovieListFragment extends ListFragment implements DisplayListFragme
             databaseHelper = getDatabaseHelper();
 
             try {
-                Dao<Movie, Integer> moviesDao = databaseHelper.getMovieDao();
-                movies = toMaterialElementList(moviesDao.queryForAll());
+                List<Movie> movieList = databaseHelper.getMovieDao().queryForAll();
+                List<TvShow> tvShowList = databaseHelper.getTvDao().queryForAll();
+
+                movies = MaterialElementList.movieListToMaterialElementList(movieList);
+                List<MaterialElement> tvShows = MaterialElementList.tvShowListToMaterialElementList(tvShowList);
+                movies.addAll(tvShows);
 
                 setListAdapter(new ArrayAdapter<>(
                         getActivity(),
@@ -117,12 +118,6 @@ public class MovieListFragment extends ListFragment implements DisplayListFragme
             }
         }
 
-    }
-
-    public List<MaterialElement> toMaterialElementList(List<Movie> movies) {
-        List<MaterialElement> materialElements = new ArrayList<>();
-        materialElements.addAll(movies);
-        return materialElements;
     }
 
     @Override
@@ -234,10 +229,14 @@ public class MovieListFragment extends ListFragment implements DisplayListFragme
 
         try {
             Dao<Movie, Integer> moviesDao = databaseHelper.getMovieDao();
-            movies = toMaterialElementList(moviesDao.queryForAll());
+            Dao<TvShow, Integer> tvShowsDao = databaseHelper.getTvDao();
 
-            if (movies.size() > 0) {
+            List<Movie> movieList = moviesDao.queryForAll();
+            List<TvShow> tvShows = tvShowsDao.queryForAll();
+
+            if (movieList.size() > 0 && tvShows.size() > 0) {
                 moviesDao.delete(moviesDao.queryForAll());
+                tvShowsDao.delete(tvShowsDao.queryForAll());
                 movies.clear();
 
                 setListAdapter(new ArrayAdapter<>(

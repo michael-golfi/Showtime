@@ -198,7 +198,8 @@ public class MovieDetailFragment extends Fragment implements Button.OnClickListe
             LoadMoviePoster loadPoster = new LoadMoviePoster(result.getPosterPath(), imageView);
             loadPoster.execute();
 
-            ((EditText) rootView.findViewById(R.id.notes_field)).setText(result.getNotes());
+            if (result.getMediaType() == Multi.MediaType.MOVIE)
+                ((EditText) rootView.findViewById(R.id.notes_field)).setText(result.getNotes());
         }
     }
 
