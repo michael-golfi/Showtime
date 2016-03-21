@@ -20,6 +20,7 @@ import com.example.showtime.app.service.MovieService;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
 import info.movito.themoviedbapi.model.MovieDb;
+import info.movito.themoviedbapi.model.Multi;
 import info.movito.themoviedbapi.model.core.MovieResultsPage;
 
 import java.sql.SQLException;
@@ -269,14 +270,11 @@ public class MovieListFragment extends ListFragment implements DisplayListFragme
 
         @Override
         protected List<MaterialElement> doInBackground(String... params) {
+            List<MaterialElement> movies = MovieService.searchForMovies(params[0]);
 
-            MovieResultsPage results = MovieService.searchForMovies(params[0]);
-            List<MaterialElement> movies = new ArrayList<>();
-
-            if (results != null) {
-                if (results.getResults().size() > 0) {
-                    for (MovieDb movie : results)
-                        movies.add(new Movie(movie));
+            if (movies != null) {
+                if (movies.size() > 0) {
+                    return movies;
                 } else {
                     movies = MovieService.searchForMoviesByPerson(params[0]);
                 }

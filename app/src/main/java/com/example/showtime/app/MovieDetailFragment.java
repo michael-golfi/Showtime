@@ -83,10 +83,9 @@ public class MovieDetailFragment extends Fragment implements Button.OnClickListe
         Movie movie;
         if (isInDatabase(id)) {
             movie = getHelper().getMovie(id);
-        } else {
-            MovieDb movieDb = MovieService.getMovieDetailsById(id);
-            movie = new Movie(movieDb);
-        }
+        } else
+            movie = MovieService.getMovieDetailsById(id);
+
         return movie;
     }
 
@@ -125,13 +124,12 @@ public class MovieDetailFragment extends Fragment implements Button.OnClickListe
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-        }
-        else if(clicked.getId() == R.id.save_notes){
-            try{
+        } else if (clicked.getId() == R.id.save_notes) {
+            try {
                 EditText notes_field = ((EditText) rootView.findViewById(R.id.notes_field));
                 String notes = notes_field.getText().toString();
-                getHelper().updateNotes(mItem.getId(),notes);
-            }catch (Exception e){
+                getHelper().updateNotes(mItem.getId(), notes);
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -157,9 +155,8 @@ public class MovieDetailFragment extends Fragment implements Button.OnClickListe
         ((TextView) rootView.findViewById(R.id.description)).setText(result.getOverview());
         ((Button) rootView.findViewById(R.id.add)).setText("Add");
 
-        ImageView imageView = (ImageView)rootView.findViewById(R.id.posterImage);
-        if (imageView != null)
-        {
+        ImageView imageView = (ImageView) rootView.findViewById(R.id.posterImage);
+        if (imageView != null) {
             LoadMoviePoster loadPoster = new LoadMoviePoster(result.getPosterPath(), imageView);
             loadPoster.execute();
         }
@@ -172,9 +169,8 @@ public class MovieDetailFragment extends Fragment implements Button.OnClickListe
         ((TextView) rootView.findViewById(R.id.release_date)).setText(result.getReleaseDate());
         ((TextView) rootView.findViewById(R.id.description)).setText(result.getOverview());
         ((Button) rootView.findViewById(R.id.add)).setText("Remove");
-        ImageView imageView = (ImageView)rootView.findViewById(R.id.posterImage);
-        if (imageView != null)
-        {
+        ImageView imageView = (ImageView) rootView.findViewById(R.id.posterImage);
+        if (imageView != null) {
             LoadMoviePoster loadPoster = new LoadMoviePoster(result.getPosterPath(), imageView);
             loadPoster.execute();
         }
