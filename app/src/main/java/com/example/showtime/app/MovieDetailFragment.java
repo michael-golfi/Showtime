@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -85,6 +86,8 @@ public class MovieDetailFragment extends Fragment implements Button.OnClickListe
         int id = Integer.parseInt(movieId);
         MaterialElement materialElement;
 
+        Log.d("Movie Detail Fragment","movieId: " + movieId);
+        Log.d("Movie Detail Fragment","mediaType: " + mediaType);
         if (mediaType.equals(Multi.MediaType.MOVIE.toString()) && movieIsInDatabase(id)) {
             materialElement = getHelper().getMovie(id);
         } else if (mediaType.equals(Multi.MediaType.MOVIE.toString()))

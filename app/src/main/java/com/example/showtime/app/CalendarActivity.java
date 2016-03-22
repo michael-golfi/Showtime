@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import com.example.showtime.app.model.DatabaseHelper;
 import com.example.showtime.app.model.Movie;
+import com.example.showtime.app.model.TvShow;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
 import com.roomorama.caldroid.CaldroidFragment;
@@ -34,9 +35,12 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import info.movito.themoviedbapi.model.Multi;
+
 public class CalendarActivity extends FragmentActivity{
     CalendarView calendar;
     private List<Movie> movies = new ArrayList<>();
+    private List<TvShow> tv_shows = new ArrayList<>();
     DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 
     private DatabaseHelper databaseHelper = null;
@@ -60,11 +64,24 @@ public class CalendarActivity extends FragmentActivity{
         try {
             Dao<Movie, Integer> moviesDao = databaseHelper.getMovieDao();
             movies = moviesDao.queryForAll();
+            Dao<TvShow, Integer> tvDao = databaseHelper.getTvDao();
+            tv_shows = tvDao.queryForAll();
 
             for(Movie movie: movies){
                 try {
                     Date date = format.parse(movie.getReleaseDate());
                     ColorDrawable cd = new ColorDrawable(0xFFFF6666);
+                    caldroidFragment.setBackgroundDrawableForDate(cd, date);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            for(TvShow tv_show: tv_shows){
+                try {
+                    Date date = format.parse(tv_show.getReleaseDate());
+                    ColorDrawable cd = new ColorDrawable(0x66CCFF00);
                     caldroidFragment.setBackgroundDrawableForDate(cd, date);
                 } catch (ParseException e) {
                     e.printStackTrace();
@@ -86,10 +103,21 @@ public class CalendarActivity extends FragmentActivity{
                 for(Movie movie: movies){
                     if (movie.getReleaseDate().equals(format.format(date))){
                         Intent detailIntent = new Intent(getApplicationContext(), MovieDetailActivity.class);
-                        detailIntent.putExtra(MovieDetailFragment.ARG_ITEM_ID, Integer.toString(movie.getId()));
+                        detailIntent.putExtra(MovieDetailFragment.ARG_ITEM_ID, String.valueOf(movie.getId()));
+                        detailIntent.putExtra(MovieDetailFragment.ARG_ITEM_TYPE,movie.getMediaType().toString());
                         startActivity(detailIntent);
                     }
                 }
+
+               for(TvShow tv_show: tv_shows){
+                    if (tv_show.getReleaseDate().equals(format.format(date))){
+                        Intent detailIntent = new Intent(getApplicationContext(), MovieDetailActivity.class);
+                        detailIntent.putExtra(MovieDetailFragment.ARG_ITEM_ID, String.valueOf(tv_show.getId()));
+                        detailIntent.putExtra(MovieDetailFragment.ARG_ITEM_TYPE,tv_show.getMediaType().toString());
+                        startActivity(detailIntent);
+                    }
+                }
+
             }
 
         };
