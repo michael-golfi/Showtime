@@ -14,8 +14,10 @@ public class MaterialElementList {
 
     public static List<MaterialElement> movieListToMaterialElementList(List<Movie> movies) {
         List<MaterialElement> materialElements = new ArrayList<>();
-        for (Movie movie : movies)
-            materialElements.add(movie);
+        if(movies != null) {
+            for (Movie movie : movies)
+                materialElements.add(movie);
+        }
         return materialElements;
     }
 

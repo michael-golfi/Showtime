@@ -33,7 +33,7 @@ public class MovieService {
 
         // Even more primitive way of parsing year
         if (query.startsWith("#"))
-            return MaterialElementList.movieListToMaterialElementList(getMoviesByDate(query));
+            return MaterialElementList.movieListToMaterialElementList(getMoviesByDate(query.substring(1)));
 
         // By default, get movies by title
         return getMaterialElementsByTitle(query);
