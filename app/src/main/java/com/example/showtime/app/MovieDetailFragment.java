@@ -229,7 +229,7 @@ public class MovieDetailFragment extends Fragment implements Button.OnClickListe
             mItem = result;
             myMovie = mItem;
 
-            if (!movieIsInDatabase(result.getId()))
+            if (!movieIsInDatabase(result.getId()) &&!tvShowIsInDatabase(result.getId()))
                 setAddMovieAttributes(result);
             else
                 setRemoveMovieAttributes(result);
