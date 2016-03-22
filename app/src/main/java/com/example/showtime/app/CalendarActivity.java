@@ -35,6 +35,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import info.movito.themoviedbapi.model.Multi;
+
 public class CalendarActivity extends FragmentActivity{
     CalendarView calendar;
     private List<Movie> movies = new ArrayList<>();
@@ -101,7 +103,8 @@ public class CalendarActivity extends FragmentActivity{
                 for(Movie movie: movies){
                     if (movie.getReleaseDate().equals(format.format(date))){
                         Intent detailIntent = new Intent(getApplicationContext(), MovieDetailActivity.class);
-                        detailIntent.putExtra(MovieDetailFragment.ARG_ITEM_ID, Integer.toString(movie.getId()));
+                        detailIntent.putExtra(MovieDetailFragment.ARG_ITEM_ID, String.valueOf(movie.getId()));
+                        detailIntent.putExtra(MovieDetailFragment.ARG_ITEM_TYPE,movie.getMediaType().toString());
                         startActivity(detailIntent);
                     }
                 }
@@ -109,7 +112,8 @@ public class CalendarActivity extends FragmentActivity{
                for(TvShow tv_show: tv_shows){
                     if (tv_show.getReleaseDate().equals(format.format(date))){
                         Intent detailIntent = new Intent(getApplicationContext(), MovieDetailActivity.class);
-                        detailIntent.putExtra(MovieDetailFragment.ARG_ITEM_ID, Integer.toString(tv_show.getId()));
+                        detailIntent.putExtra(MovieDetailFragment.ARG_ITEM_ID, String.valueOf(tv_show.getId()));
+                        detailIntent.putExtra(MovieDetailFragment.ARG_ITEM_TYPE,tv_show.getMediaType().toString());
                         startActivity(detailIntent);
                     }
                 }
