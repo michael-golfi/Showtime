@@ -15,7 +15,7 @@ public class TvShow implements MaterialElement {
     private String title;
 
     @DatabaseField
-    private String notes = "";
+    private String notes;
 
     @DatabaseField
     private String overview;
@@ -39,7 +39,6 @@ public class TvShow implements MaterialElement {
         this.overview = series.getOverview();
         this.releaseDate = series.getFirstAirDate();
         this.posterPath = series.getPosterPath();
-        this.notes = "";
     }
 
     @Override
@@ -74,9 +73,8 @@ public class TvShow implements MaterialElement {
 
     public String getNotes() {
         Log.d("TvShow", "Retrieving notes:" + notes);
-        // TODO - returns null
-        // return this.notes;
-        return "";
+        return this.notes;
+
     }
 
     @Override

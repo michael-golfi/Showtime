@@ -86,8 +86,8 @@ public class MovieDetailFragment extends Fragment implements Button.OnClickListe
         int id = Integer.parseInt(movieId);
         MaterialElement materialElement;
 
-        Log.d("Movie Detail Fragment","movieId: " + movieId);
-        Log.d("Movie Detail Fragment","mediaType: " + mediaType);
+        Log.d("Movie Detail Fragment", "movieId: " + movieId);
+        Log.d("Movie Detail Fragment", "mediaType: " + mediaType);
         if (mediaType.equals(Multi.MediaType.MOVIE.toString()) && movieIsInDatabase(id)) {
             materialElement = getHelper().getMovie(id);
         } else if (mediaType.equals(Multi.MediaType.MOVIE.toString()))
@@ -141,7 +141,11 @@ public class MovieDetailFragment extends Fragment implements Button.OnClickListe
             try {
                 EditText notes_field = ((EditText) rootView.findViewById(R.id.notes_field));
                 String notes = notes_field.getText().toString();
-                getHelper().updateNotes(mItem.getId(), notes);
+                if(mItem.getMediaType().equals(Multi.MediaType.MOVIE)) {
+                    getHelper().updateNotes(mItem.getId(), notes);
+                }else{
+                    getHelper().updateTVNotes(mItem.getId(), notes);
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -201,8 +205,7 @@ public class MovieDetailFragment extends Fragment implements Button.OnClickListe
             LoadMoviePoster loadPoster = new LoadMoviePoster(result.getPosterPath(), imageView);
             loadPoster.execute();
 
-            if (result.getMediaType() == Multi.MediaType.MOVIE)
-                ((EditText) rootView.findViewById(R.id.notes_field)).setText(result.getNotes());
+            ((EditText) rootView.findViewById(R.id.notes_field)).setText(result.getNotes());
         }
     }
 
