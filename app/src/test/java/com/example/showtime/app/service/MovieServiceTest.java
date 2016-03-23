@@ -124,4 +124,12 @@ public class MovieServiceTest {
         List<MaterialElement> results = MovieService.getMoviesByDirector("Shutter Island");
         assert results.size() == 0;
     }
+
+    @Test
+    public void testGetTVShow() throws Exception{
+        List<MaterialElement> results = MovieService.getMaterialElementsByTitle("House of Cards");
+        assert results.size() > 0;
+    }
+
+
 }

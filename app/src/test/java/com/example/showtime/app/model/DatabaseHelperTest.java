@@ -11,6 +11,8 @@ import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -137,5 +139,92 @@ public class DatabaseHelperTest {
         assertFalse(databaseHelper.movieExists(2));
     }
 
+    //Test if a specific tv show exists in the database
+    @Test
+    public void tvShowExistsTest(){
+        TvShow tvShow =new TvShow();
+        tvShow.setId(1);
+        tvShow.setTitle("House of Cards");
+        tvShow.setReleaseDate("01-02-2013");
+        tvShow.setOverview("Politics in the White House");
+        databaseHelper.createTv(tvShow);
+        assertTrue(databaseHelper.tvShowExists(1));
+        assertFalse(databaseHelper.tvShowExists(2));
+    }
+
+    //Test querying specific tv show from database
+    @Test
+    public void tvShowQueryTest(){
+        TvShow tvShow =new TvShow();
+        tvShow.setId(1);
+        tvShow.setTitle("House of Cards");
+        tvShow.setReleaseDate("01-02-2013");
+        tvShow.setOverview("Politics in the White House.");
+        databaseHelper.createTv(tvShow);
+        TvShow tvShow2 =new TvShow();
+        tvShow2.setId(2);
+        tvShow2.setTitle("Suits");
+        tvShow2.setReleaseDate("01-02-2011");
+        tvShow2.setOverview("Lawyers in suits.");
+        databaseHelper.createTv(tvShow2);
+        TvShow tvShow3 = databaseHelper.getTvShow(2);
+        assertTrue(tvShow3.getId() == 2);
+        assertTrue(tvShow3.getTitle().equals("Suits"));
+        assertTrue(tvShow3.getReleaseDate().equals("01-02-2011"));
+        assertTrue(tvShow3.getOverview().equals("Lawyers in suits."));
+
+    }
+
+    //Test deleting a tv show from the database
+    @Test
+    public void deleteTVShowTest(){
+        TvShow tvShow =new TvShow();
+        tvShow.setId(1);
+        tvShow.setTitle("House of Cards");
+        tvShow.setReleaseDate("01-02-2013");
+        tvShow.setOverview("Politics in the White House");
+        databaseHelper.createTv(tvShow);
+        assertTrue(databaseHelper.getCountOfTvShow() == 1);
+        databaseHelper.deleteTvShow(1);
+        assertTrue(databaseHelper.getCountOfTvShow() == 0);
+
+
+    }
+
+    //Test querying previous search from the database
+    @Test
+    public void querySearchTest() throws SQLException{
+        List<Query> results;
+        String query = "Leonardo";
+        databaseHelper.createQuery(query);
+        results = databaseHelper.getQueries();
+        assertTrue(results.get(0).getQuery().equals("Leonardo"));
+
+    }
+
+    //Test deleting history
+    @Test
+    public void deleteQueriesTest()throws SQLException{
+        String query = "Leonardo";
+        databaseHelper.createQuery(query);
+        assert(databaseHelper.getQueries().size() == 1);
+        databaseHelper.deleteQueries();
+        assert (databaseHelper.getQueries().size() == 0);
+
+    }
+
+    //Test save and update notes
+    @Test
+    public void testSaveNotes() throws SQLException{
+        Movie movie1 = new Movie();
+        movie1.setId(1);
+        movie1.setTitle("UP");
+        movie1.setReleaseDate("29-05-2009");
+        movie1.setOverview("Seventy-eight year old Carl Fredricksen travels to Paradise Falls in his home equipped with balloons, inadvertently taking a young stowaway.");
+        databaseHelper.createMovie(movie1);
+        assert (databaseHelper.getMovie(1).getNotes() == null);
+        databaseHelper.updateNotes(1,"Good, fun movie");
+        assert (databaseHelper.getMovie(1).getNotes().equals("Good, fun movie"));
+    }
 }
 
