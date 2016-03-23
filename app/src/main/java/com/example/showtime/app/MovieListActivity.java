@@ -147,6 +147,20 @@ public class MovieListActivity extends AppCompatActivity
             }
         });
         final MenuItem languageButton = menu.findItem(R.id.action_languages);
+        if(language.equals("en")) {
+            searchView.setQueryHint("Search...");
+            calendarButton.setTitle("Calendar");
+            historyButton.setTitle("History");
+            deleteAll.setTitle("Delete All");
+            languageButton.setTitle("Switch En/Fr");
+        }
+        else{
+            searchView.setQueryHint("Rechercher...");
+            calendarButton.setTitle("Calendrier");
+            historyButton.setTitle("Historique");
+            deleteAll.setTitle("Tout Supprimer");
+            languageButton.setTitle("Changer Fr/En");
+        }
         languageButton.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
@@ -185,7 +199,6 @@ public class MovieListActivity extends AppCompatActivity
                 historyButton.setTitle(historyLanguage);
                 languageButton.setTitle(changeLanguage);
                 deleteAll.setTitle(deleteAllLanguage);
-                //changing search item does nothing
                 searchView.setQueryHint(searchLanguage);
 
                 Log.d("mla", "onMenuItemClick: languagechange to -->" + language);
