@@ -1,6 +1,8 @@
 package com.example.showtime.app.service;
 
 import android.util.Log;
+
+import com.example.showtime.app.MovieListActivity;
 import com.example.showtime.app.model.*;
 import com.uwetrottmann.tmdb.Tmdb;
 import com.uwetrottmann.tmdb.entities.AppendToDiscoverResponse;
@@ -17,6 +19,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MovieService {
+
+
+    public static String language = "en";
+
 
     //Since we are only allowed 40 requests per second
     private static final int MAX_ALLOWED_REQUESTS = 20;
@@ -48,15 +54,15 @@ public class MovieService {
     }
 
     public static List<MaterialElement> getMaterialElementsByTitle(String query) {
-        return MaterialElementList.multiListToMaterialElementList(api.getSearch().searchMulti(query, "en", 0).getResults());
+        return MaterialElementList.multiListToMaterialElementList(api.getSearch().searchMulti(query, MovieListActivity.language, 0).getResults());
     }
 
     public static Movie getMovieDetailsById(int id) {
-        return new Movie(api.getMovies().getMovie(id, "en"));
+        return new Movie(api.getMovies().getMovie(id, MovieListActivity.language));
     }
 
     public static TvShow getTvShowDetailsById(int id) {
-        return new TvShow(api.getTvSeries().getSeries(id, "en"));
+        return new TvShow(api.getTvSeries().getSeries(id, MovieListActivity.language));
     }
 
     public static List<Movie> getMoviesByGenre(String genre) throws IllegalArgumentException {
@@ -65,7 +71,7 @@ public class MovieService {
         if (genreNumber == -1)
             throw new IllegalArgumentException("No movies except for argument");
 
-        return MovieList.toMovieList(api.getGenre().getGenreMovies(genreNumber, "en", 0, false).getResults());
+        return MovieList.toMovieList(api.getGenre().getGenreMovies(genreNumber, MovieListActivity.language, 0, false).getResults());
     }
 
     public static List<MaterialElement> getMoviesByActor(String actor) {
@@ -78,7 +84,7 @@ public class MovieService {
             return movieResults;
         }
         int actor_id = actorsResults.getResults().get(0).getId();
-        resultsPage = discoverService.discoverMovie(false, false, "en", 1,
+        resultsPage = discoverService.discoverMovie(false, false, MovieListActivity.language, 1,
                 null, null, null, null, null, SortBy.POPULARITY_DESC,
                 null, null, null, null, new AppendToDiscoverResponse(actor_id),
                 null, null, null, null, null, null);
@@ -109,7 +115,7 @@ public class MovieService {
             return movieResults;
         }
         int director_id = directorsResults.getResults().get(0).getId();
-        resultsPage = discoverService.discoverMovie(false, false, "en", 1,
+        resultsPage = discoverService.discoverMovie(false, false, MovieListActivity.language, 1,
                 null, null, null, null, null, SortBy.POPULARITY_DESC,
                 null, null, null, null, null,
                 null, null, null, null, new AppendToDiscoverResponse(director_id), null);

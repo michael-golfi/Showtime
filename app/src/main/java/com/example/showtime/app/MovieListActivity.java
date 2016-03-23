@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.support.v7.widget.SearchView;
 import android.widget.CalendarView;
 import com.example.showtime.app.model.DatabaseHelper;
+import com.example.showtime.app.service.MovieService;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import info.movito.themoviedbapi.model.Multi;
 
@@ -37,7 +38,7 @@ import info.movito.themoviedbapi.model.Multi;
 public class MovieListActivity extends AppCompatActivity
         implements MovieListFragment.Callbacks, HistoryListFragment.Callbacks,
         SearchView.OnQueryTextListener, MenuItemCompat.OnActionExpandListener {
-
+        public static String language = "en";
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
      * device.
@@ -47,6 +48,7 @@ public class MovieListActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_movie_list);
 
         if (findViewById(R.id.movie_detail_container) != null) {
@@ -128,13 +130,28 @@ public class MovieListActivity extends AppCompatActivity
             }
         });
 
-        MenuItem historybutton = menu.findItem(R.id.action_history);
-        historybutton.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+        MenuItem historyButton = menu.findItem(R.id.action_history);
+        historyButton.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                 Fragment newFragment = new HistoryListFragment();
                 transaction.replace(R.id.movie_list, newFragment).commit();
+                return true;
+            }
+        });
+        MenuItem languageButton = menu.findItem(R.id.action_languages);
+        languageButton.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+
+                if (language == "fr")
+                {
+                        language = "en";
+                }
+                else language = "fr";
+
+                Log.d("mla", "onMenuItemClick: languagechange to -->" + language);
                 return true;
             }
         });
