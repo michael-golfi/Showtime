@@ -39,6 +39,12 @@ public class MovieListActivity extends AppCompatActivity
         implements MovieListFragment.Callbacks, HistoryListFragment.Callbacks,
         SearchView.OnQueryTextListener, MenuItemCompat.OnActionExpandListener {
         public static String language = "en";
+        public static String calenderLanguage = "Calender";
+        public static String historyLanguage = "History";
+        public static String deleteAllLanguage = "Delete All";
+        public static String changeLanguage = "Switch En/Fr";
+        public static String searchLanguage = "Search";
+
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
      * device.
@@ -104,14 +110,14 @@ public class MovieListActivity extends AppCompatActivity
         getMenuInflater().inflate(R.menu.options_menu, menu);
 
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        MenuItem searchItem = menu.findItem(R.id.action_search);
+        final MenuItem searchItem = menu.findItem(R.id.action_search);
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         searchView.setOnQueryTextListener(this);
         MenuItemCompat.setOnActionExpandListener(searchItem, this);
 
-        MenuItem calendarbutton = menu.findItem(R.id.action_calendar);
-        CalendarView calendarView = (CalendarView) MenuItemCompat.getActionView(calendarbutton);
-        calendarbutton.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+        final MenuItem calendarButton = menu.findItem(R.id.action_calendar);
+        CalendarView calendarView = (CalendarView) MenuItemCompat.getActionView(calendarButton);
+        calendarButton.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 Intent intent = new Intent(MovieListActivity.this, CalendarActivity.class);
@@ -120,7 +126,7 @@ public class MovieListActivity extends AppCompatActivity
             }
         });
 
-        MenuItem deleteAll = menu.findItem(R.id.action_delete_all);
+        final MenuItem deleteAll = menu.findItem(R.id.action_delete_all);
         deleteAll.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
@@ -130,7 +136,7 @@ public class MovieListActivity extends AppCompatActivity
             }
         });
 
-        MenuItem historyButton = menu.findItem(R.id.action_history);
+        final MenuItem historyButton = menu.findItem(R.id.action_history);
         historyButton.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
@@ -140,16 +146,39 @@ public class MovieListActivity extends AppCompatActivity
                 return true;
             }
         });
-        MenuItem languageButton = menu.findItem(R.id.action_languages);
+        final MenuItem languageButton = menu.findItem(R.id.action_languages);
         languageButton.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
 
-                if (language == "fr")
+                if (language.equals("fr"))
                 {
                         language = "en";
+                        calenderLanguage = "Calender";
+                        historyLanguage = "History";
+                        deleteAllLanguage = "Delete All";
+                        changeLanguage = "Switch En/Fr";
+                    //does nothing
+                    searchLanguage = "Search";
                 }
-                else language = "fr";
+                else
+                {
+                        language = "fr";
+                        calenderLanguage = "Calendrier";
+                        historyLanguage = "Histoire";
+                        deleteAllLanguage = "Tout Supprimer";
+                        changeLanguage = "Changer En/Fr";
+                    //does nothing
+                    searchLanguage = "Rechercher";
+                }
+
+
+                calendarButton.setTitle(calenderLanguage);
+                historyButton.setTitle(historyLanguage);
+                languageButton.setTitle(changeLanguage);
+                deleteAll.setTitle(deleteAllLanguage);
+                //changing search item does nothing
+                searchItem.setTitle(searchLanguage);
 
                 Log.d("mla", "onMenuItemClick: languagechange to -->" + language);
                 return true;
