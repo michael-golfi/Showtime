@@ -33,6 +33,7 @@ public class MovieDetailActivity extends AppCompatActivity implements Button.OnC
 
         // Show the Up button in the action bar.
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle("Details");
 
         // savedInstanceState is non-null when there is fragment state
         // saved from previous configurations of this activity

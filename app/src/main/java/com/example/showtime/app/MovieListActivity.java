@@ -39,11 +39,11 @@ public class MovieListActivity extends AppCompatActivity
         implements MovieListFragment.Callbacks, HistoryListFragment.Callbacks,
         SearchView.OnQueryTextListener, MenuItemCompat.OnActionExpandListener {
         public static String language = "en";
-        public static String calenderLanguage = "Calender";
+        public static String calendarLanguage = "Calendar";
         public static String historyLanguage = "History";
         public static String deleteAllLanguage = "Delete All";
         public static String changeLanguage = "Switch En/Fr";
-        public static String searchLanguage = "Search";
+        public static String searchLanguage = "Search...";
 
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
@@ -111,7 +111,7 @@ public class MovieListActivity extends AppCompatActivity
 
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         final MenuItem searchItem = menu.findItem(R.id.action_search);
-        SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         searchView.setOnQueryTextListener(this);
         MenuItemCompat.setOnActionExpandListener(searchItem, this);
 
@@ -153,32 +153,40 @@ public class MovieListActivity extends AppCompatActivity
 
                 if (language.equals("fr"))
                 {
-                        language = "en";
-                        calenderLanguage = "Calender";
-                        historyLanguage = "History";
-                        deleteAllLanguage = "Delete All";
-                        changeLanguage = "Switch En/Fr";
-                    //does nothing
-                    searchLanguage = "Search";
+                    language = "en";
+                    calendarLanguage = "Calendar";
+                    historyLanguage = "History";
+                    deleteAllLanguage = "Delete All";
+                    changeLanguage = "Switch En/Fr";
+                    searchLanguage = "Search...";
+                    MovieDetailFragment.addLanguage = "Add";
+                    MovieDetailFragment.removeLanguage = "Remove";
+                    MovieDetailFragment.addNotesLanguage = "Add Notes";
+                    MovieDetailFragment.saveNotesLanguage = "Save Modifications";
+                    MovieDetailFragment.exportLanguage = "Export";
                 }
                 else
                 {
-                        language = "fr";
-                        calenderLanguage = "Calendrier";
-                        historyLanguage = "Histoire";
-                        deleteAllLanguage = "Tout Supprimer";
-                        changeLanguage = "Changer En/Fr";
-                    //does nothing
-                    searchLanguage = "Rechercher";
+                    language = "fr";
+                    calendarLanguage = "Calendrier";
+                    historyLanguage = "Historique";
+                    deleteAllLanguage = "Tout Supprimer";
+                    changeLanguage = "Changer En/Fr";
+                    searchLanguage = "Rechercher...";
+                    MovieDetailFragment.addLanguage = "Ajouter";
+                    MovieDetailFragment.removeLanguage = "Supprimer";
+                    MovieDetailFragment.addNotesLanguage = "Ajouter des notes";
+                    MovieDetailFragment.saveNotesLanguage = "Sauver les modifications";
+                    MovieDetailFragment.exportLanguage = "Exporter";
                 }
 
 
-                calendarButton.setTitle(calenderLanguage);
+                calendarButton.setTitle(calendarLanguage);
                 historyButton.setTitle(historyLanguage);
                 languageButton.setTitle(changeLanguage);
                 deleteAll.setTitle(deleteAllLanguage);
                 //changing search item does nothing
-                searchItem.setTitle(searchLanguage);
+                searchView.setQueryHint(searchLanguage);
 
                 Log.d("mla", "onMenuItemClick: languagechange to -->" + language);
                 return true;

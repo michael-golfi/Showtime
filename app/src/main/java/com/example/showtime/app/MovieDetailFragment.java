@@ -41,6 +41,12 @@ public class MovieDetailFragment extends Fragment implements Button.OnClickListe
      */
     public static final String ARG_ITEM_ID = "item_id";
     public static final String ARG_ITEM_TYPE = "item_type";
+    public static String addLanguage = "Add";
+    public static String removeLanguage = "Remove";
+    public static String addNotesLanguage = "Add notes";
+    public static String saveNotesLanguage = "Save modifications";
+    public static String exportLanguage = "Export";
+    public static String notificationLanguage = "Notification";
 
     private MaterialElement mItem;
     // TODO: fix this
@@ -109,6 +115,14 @@ public class MovieDetailFragment extends Fragment implements Button.OnClickListe
         rootView.findViewById(R.id.add).setOnClickListener(this);
         rootView.findViewById(R.id.export_btn).setOnClickListener(this);
         rootView.findViewById(R.id.save_notes).setOnClickListener(this);
+        Button save_notes = (Button) rootView.findViewById(R.id.save_notes);
+        save_notes.setText(saveNotesLanguage);
+        EditText notes_field = (EditText) rootView.findViewById(R.id.notes_field);
+        notes_field.setHint(addNotesLanguage);
+        Button export = (Button) rootView.findViewById(R.id.export_btn);
+        export.setText(exportLanguage);
+        Button notification = (Button) rootView.findViewById(R.id.notificationButton);
+        notification.setText(notificationLanguage);
 
 
         return rootView;
@@ -184,7 +198,7 @@ public class MovieDetailFragment extends Fragment implements Button.OnClickListe
         ((TextView) rootView.findViewById(R.id.title)).setText(result.getTitle());
         ((TextView) rootView.findViewById(R.id.release_date)).setText(result.getReleaseDate());
         ((TextView) rootView.findViewById(R.id.description)).setText(result.getOverview());
-        ((Button) rootView.findViewById(R.id.add)).setText("Add");
+        ((Button) rootView.findViewById(R.id.add)).setText(addLanguage);
 
         ImageView imageView = (ImageView) rootView.findViewById(R.id.posterImage);
         if (imageView != null) {
@@ -199,7 +213,7 @@ public class MovieDetailFragment extends Fragment implements Button.OnClickListe
         ((TextView) rootView.findViewById(R.id.title)).setText(result.getTitle());
         ((TextView) rootView.findViewById(R.id.release_date)).setText(result.getReleaseDate());
         ((TextView) rootView.findViewById(R.id.description)).setText(result.getOverview());
-        ((Button) rootView.findViewById(R.id.add)).setText("Remove");
+        ((Button) rootView.findViewById(R.id.add)).setText(removeLanguage);
         ImageView imageView = (ImageView) rootView.findViewById(R.id.posterImage);
         if (imageView != null) {
             LoadMoviePoster loadPoster = new LoadMoviePoster(result.getPosterPath(), imageView);
