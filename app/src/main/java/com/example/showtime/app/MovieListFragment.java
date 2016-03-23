@@ -234,7 +234,7 @@ public class MovieListFragment extends ListFragment implements DisplayListFragme
             List<Movie> movieList = moviesDao.queryForAll();
             List<TvShow> tvShows = tvShowsDao.queryForAll();
 
-            if (movieList.size() > 0 && tvShows.size() > 0) {
+            if (movieList.size() > 0 || tvShows.size() > 0) {
                 moviesDao.delete(moviesDao.queryForAll());
                 tvShowsDao.delete(tvShowsDao.queryForAll());
                 movies.clear();
